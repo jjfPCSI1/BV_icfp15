@@ -1,0 +1,19 @@
+\documentclass[12pt]{article}
+
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}    % Accents codés dans la fonte.
+\usepackage[latin1]{inputenc}   % Accents 8 bits dans le fichier.
+
+%% Rendre les guillemets ('«' et '»') actifs.
+%%
+%% Attention, cela implique de ne pas mettre d'espace après '«'
+%% ni avant '»' dans le code source.
+%%
+%% Exemple de composition correcte: «comme ceci».
+
+\catcode`\«=\active
+\catcode`\»=\active
+\def«{\og\ignorespaces}
+\def»{{\fg}}
+
+\newcommand{\ofg}[1]{\og{}#1\fg{}}
