@@ -1,1 +1,146 @@
 \section{Solution choisie}
+\subsection{Hachage des positions}
+Afin de pouvoir assurer qu'aucune répétition de position a lieu il ne suffit pas de prendre 
+en compte des couples $(M,r)$ où $M$ est la position du pivot et $r$ la rotation effectués sur la 
+pièce.
+
+En effet, certaines pièces sont invariantes par certaines rotations et la seule donnée de $r$
+ne permet pas de le prendre en compte. On considère pour cela son groupe d'invariants.
+
+Soit $p$ une pièce on note $r_p$ la rotation d'un angle $\frac{\pi}{6}$ autour de son pivot.
+
+On note $R(p)$ le sous-groupe des isométries du plan engendrées par $r_p$ et $I(p)$ 
+le sous-groupe de $R(p)$ constitué des éléments laissant $p$ invariante.
+
+Pour une position donnée du pivot, on a donc autant de possibilités pour la pièce que
+d'éléments dans $G_r(p) = R(p) / I(p)$ (tous ces groupes sont abéliens). 
+
+Comme $R(p) \sim \Z/6\Z$ on a quatre cas pour $G_r(p)$ :
+\begin{itemize}
+\item $G_r(p) \sim \Z/6\Z$. Exemple :
+
+    \begin{tikzpicture}
+    \begin{scope}
+        \hexgrid{2}{2}
+        \unit{0/1,1/1}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (3,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=4cm]
+        \hexgrid{2}{2}
+        \unit{1/0,1/1}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (7,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=8cm]
+        \hexgrid{2}{2}
+        \unit{2/0,1/1}
+        \pivot{1}{1}
+    \end{scope}
+    \end{tikzpicture}
+
+
+    \begin{tikzpicture}
+    \node at (-.75,-0.5) {\Large $\circlearrowright$};
+    \begin{scope}
+        \hexgrid{2}{2}
+        \unit{2/1,1/1}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (3,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=4cm]
+        \hexgrid{2}{2}
+        \unit{2/2,1/1}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (7,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=8cm]
+        \hexgrid{2}{2}
+        \unit{1/2,1/1}
+        \pivot{1}{1}
+    \end{scope}
+    \end{tikzpicture}
+
+\item $G_r(p) \sim \Z/3\Z$. Exemple :
+
+    \begin{tikzpicture}
+    \begin{scope}
+        \hexgrid{2}{2}
+        \unit{0/1,1/1,2/1}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (3,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=4cm]
+        \hexgrid{2}{2}
+        \unit{1/0,1/1,2/2}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (7,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=8cm]
+        \hexgrid{2}{2}
+        \unit{2/0,1/1,1/2}
+        \pivot{1}{1}
+    \end{scope}
+    \end{tikzpicture}
+
+\item $G_r(p) \sim \Z/2\Z$. Exemple :
+
+    \begin{tikzpicture}
+
+    \begin{scope}
+        \hexgrid{2}{2}
+        \unit{1/0,2/1,1/2}
+        \pivot{1}{1}
+    \end{scope}
+
+    \node at (3,-0.5) {\Large $\circlearrowright$};
+
+    \begin{scope}[xshift=4cm]
+        \hexgrid{2}{2}
+        \unit{0/1,2/0,2/2}
+        \pivot{1}{1}
+    \end{scope}
+
+    \end{tikzpicture}
+
+\item $G_r(p) \sim \mathbf{0}$. Exemples :
+
+    \begin{tikzpicture}
+        \hexcell{0}{0}
+        \pivot{0}{0}
+    \end{tikzpicture} 
+    \quad
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{1/0,2/0,0/1,1/1,2/1,1/2,2/2}
+        \pivot{1}{1}
+    \end{tikzpicture} 
+\end{itemize}
+
+On peut alors représenter uniquement la position d'une pièce à symétrie près par un couple 
+$(M,r)$ où $M$ est la position du pivot et $r \in G_r(p)$.
+
+En pratique, on identifie $r$ à l'élément $k \in \{0,1,...,5\}$ tel que $r$ soit 
+associé à $\overline{k}$ par les isomorphismes ci-dessus.
+
+On est donc ramené à un triplet d'entier par position. Comme le pivot peut sortir
+de la zone de jeu, il faut border le tableau pour pouvoir tenir compte de ces positions du pivot.
+
+Un calcul rapide sur les pièces disponibles permet de déterminer une valeur $b$ telle que le pivot 
+dans une zone de jeu de dimension $w \times h$ ait des coordonnées dans $[|-b;w+b-1|] \times
+[|-b;h+b-1|]$. 
+
+On peut alors créer un tableau de booléens à trois dimensions $V$ tel que $V_{x,y,k}$
+indique si la position où le pivot est en $(x,y)$ et la rotation est celle associée à $k$.

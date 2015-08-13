@@ -1,0 +1,41 @@
+
+\tikzset{
+    hexgrid/.style= {shape=regular polygon,regular polygon sides=6,minimum size=1cm, draw,inner sep=0,anchor=south,fill=white,rotate=30}
+}
+\tikzset{
+    hexcell/.style= {shape=regular polygon,regular polygon sides=6,minimum size=1cm, draw,inner sep=0,anchor=south,fill=gray!50,rotate=30}
+}
+
+\newcommand{\hexgrid}[2]{
+    \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#2} {
+        \pgfmathparse{mod(\y,2)};
+        \node[hexgrid]
+            (h\x;\y) at (0.45*\pgfmathresult+1.75*\x*0.5,-1.5*\y*0.5) {};
+    }
+    }
+}
+
+\newcommand{\hexcell}[2]{
+    \node[hexcell] at (h#1;#2.south) {};
+}
+\newcommand{\pivot}[2]{
+    \fill[black] (h#1;#2.center) circle (2pt);
+    \draw[black] (h#1;#2.center) circle (5pt);
+}
+
+\newcommand{\unit}[1]{
+    \foreach \x/\y in {#1} {
+        \hexcell{\x}{\y}
+    }
+}
+
+\newcommand{\CW}[2]{
+    \draw [->,very thick] (h#1;#2.center) ++(330:.2cm) arc (330:0:.2cm);
+}
+\newcommand{\CCW}[2]{
+    \draw [->,very thick] (h#1;#2.center) ++(30:.2cm) arc (30:360:.2cm);
+}
+\newcommand{\mSE}[2]{
+    \draw [->,very thick] (h#1;#2.center) ++(-60:.21cm) -- ++(-60:.5cm);
+}
