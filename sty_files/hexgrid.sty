@@ -24,7 +24,7 @@
     \draw[black] (h#1;#2.center) circle (5pt);
 }
 
-\newcommand{\unit}[1]{
+\renewcommand{\unit}[1]{
     \foreach \x/\y in {#1} {
         \hexcell{\x}{\y}
     }

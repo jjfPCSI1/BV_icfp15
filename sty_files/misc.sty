@@ -1,13 +1,14 @@
-\documentclass[12pt]{article}
-
-\usepackage[frenchb]{babel}
-\usepackage[T1]{fontenc}    % Accents codés dans la fonte.
-\usepackage[latin1]{inputenc}   % Accents 8 bits dans le fichier.
-
 \usepackage{amsmath,amsfonts}
-\usepackage{mathabx}
+%\usepackage{mathabx}
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\alph{subsection}}
+\setcounter{secnumdepth}{3}
+\renewcommand{\thesubsubsection}{\roman{subsubsection}}
+\renewcommand\FrenchLabelItem{$\bullet$}
+
 %% Rendre les guillemets ('«' et '»') actifs.
 %%
 %% Attention, cela implique de ne pas mettre d'espace après '«'
@@ -21,7 +22,7 @@
 \def»{{\fg}}
 
 \newcommand{\ofg}[1]{\og{}#1\fg{}}
-\newcommand{\Z}[0]{\mathbb{Z}}
-\newcommand{\N}[0]{\mathbb{Z}}
-\newcommand{\R}[0]{\mathbb{Z}}
-\newcommand{\Q}[0]{\mathbb{Z}}
+%\newcommand{\Z}[0]{\mathbb{Z}}
+%\newcommand{\N}[0]{\mathbb{Z}}
+%\newcommand{\R}[0]{\mathbb{Z}}
+%\newcommand{\Q}[0]{\mathbb{Z}}

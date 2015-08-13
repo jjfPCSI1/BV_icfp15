@@ -1,0 +1,440 @@
+\ProvidesFile{BV.sty} 
+\ProvidesPackage{BV}
+
+%---------------  Packages classiques -------------------------
+
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english,frenchb]{babel}
+\usepackage{paralist}
+\usepackage[latin1]{inputenc}
+\usepackage{mathrsfs}
+%\usepackage{slashbox}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{enumerate}
+\usepackage{eurosym}
+\usepackage{fancybox}
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex]{color}
+\usepackage[pdftex]{colortbl}
+\DeclareGraphicsRule{.pdftex}{pdf}{*}{}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.pdf,.mps,.png,.gif}
+\usepackage{fancyhdr}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{bbm}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{ccaption}
+\usepackage[squaren,Gray]{SIunits}
+\usepackage{array}
+%\usepackage{epic,autograph}
+%\usepackage{ulem}
+\usepackage{fancyvrb}
+\usepackage{pifont,color}
+%--------------- Polices
+
+
+\usepackage{fourier}
+\newcommand{\helv}{% 
+\fontfamily{phv}\fontsize{11}{13}\selectfont}
+
+%--------------- Dimensions diverses --------------------------
+
+
+\usepackage[papersize={168mm,240mm},
+textheight=20cm, textwidth=13.2cm, %includehead, 
+headsep=8pt, 
+bottom=2cm,
+%inner=3.9cm
+inner=1.8cm]{geometry}
+
+% \hsize = 132 truemm
+% \vsize = 200 truemm
+% \voffset = 5 truemm
+% \hoffset = 13.65 truemm
+\parindent=0pt
+
+
+%\parskip=8pt
+%
+%\hoffset         13.65 truemm
+%\textwidth       13.2cm
+%% \evensidemargin  0.5cm
+%% \oddsidemargin   0.5cm
+%\voffset         5 truemm
+%% \topmargin       1.2cm 
+%% \headheight      0cm
+%% \headsep         0cm
+%\textheight      20cm
+%\addtolength{\footskip}{0.4cm} 
+%\setlength{\parindent}{0cm}
+%\setlength{\columnsep}{1cm}
+
+
+
+%------------- ALPHABET AVEC DOUBLE BARRE -------------
+
+\def\Aset{\mathbb A}
+\def\Bset{\mathbb B}
+\def\Cset{\mathbb C}
+\def\C{\mathbb C}
+\def\Dset{\mathbb D}
+\def\Eset{\mathbb E}
+\def\Fset{\mathbb F}
+\def\Gset{\mathbb G}
+\def\Hset{\mathbb H}
+\def\Iset{\mathbb I}
+\def\Jset{\mathbb J}
+\def\Kset{\mathbb K}
+\def\K{\mathbb K}
+\def\Lset{\mathbb L}
+\def\Mset{\mathbb M}
+\def\Nset{\mathbb N}
+\def\N{\mathbb N}
+\def\Oset{\mathbb O}
+\def\Pset{\mathbb P}
+\def\Qset{\mathbb Q}
+\def\Q{\mathbb Q}
+\def\Rset{\mathbb R}
+\def\R{\mathbb R}
+\def\Sset{\mathbb S}
+\def\Tset{\mathbb T}
+\def\Uset{\mathbb U}
+\def\Vset{\mathbb V}
+\def\Xset{\mathbb X}
+\def\Yset{\mathbb Y}
+\def\Zset{\mathbb Z}
+\def\Z{\mathbb Z}
+
+%-------------------- ALPHABET DE LETTRES RONDES -------------------
+
+\def\Acal{\mathcal A}
+\def\Bcal{\mathcal B}
+\def\Ccal{\mathcal C}
+\def\Dcal{\mathcal D}
+\def\Ecal{\mathcal E}
+\def\Fcal{\mathcal F}
+\def\Gcal{\mathcal G}
+\def\Hcal{\mathcal H}
+\def\Ical{\mathcal I}
+\def\Jcal{\mathcal J}
+\def\Kcal{\mathcal K}
+\def\Lcal{\mathcal L}
+\def\Mcal{\mathcal M}
+\def\Ncal{\mathcal N}
+\def\Ocal{\mathcal O}
+\def\Pcal{\mathcal P}
+\def\Qcal{\mathcal Q}
+\def\Rcal{\mathcal R}
+\def\Scal{\mathcal S}
+\def\Tcal{\mathcal T}
+\def\Ucal{\mathcal U}
+\def\Vcal{\mathcal V}
+\def\Wcal{\mathcal W}
+\def\Xcal{\mathcal X}
+\def\Ycal{\mathcal Y}
+\def\Zcal{\mathcal Z}
+
+%-------------------- ALPHABET DE LETTRES RONDES 2 -------------------
+
+\def\Ascr{\mathscr A}
+\def\Bscr{\mathscr B}
+\def\Cscr{\mathscr C}
+\def\Dscr{\mathscr D}
+\def\Escr{\mathscr E}
+\def\Fscr{\mathscr F}
+\def\Gscr{\mathscr G}
+\def\Hscr{\mathscr H}
+\def\Iscr{\mathscr I}
+\def\Jscr{\mathscr J}
+\def\Kscr{\mathscr K}
+\def\Lscr{\mathscr L}
+\def\Mscr{\mathscr M}
+\def\Nscr{\mathscr N}
+\def\Oscr{\mathscr O}
+\def\Pscr{\mathscr P}
+\def\Qscr{\mathscr Q}
+\def\Rscr{\mathscr R}
+\def\Sscr{\mathscr S}
+\def\Tscr{\mathscr T}
+\def\Uscr{\mathscr U}
+\def\Vscr{\mathscr V}
+\def\Wscr{\mathscr W}
+\def\Xscr{\mathscr X}
+\def\Yscr{\mathscr Y}
+\def\Zscr{\mathscr Z}
+
+%-------------------- ALPHABET GOTHIQUE -------------------
+
+\def\Agot{\mathfrak A}
+\def\Bgot{\mathfrak B}
+\def\Cgot{\mathfrak C}
+\def\Dgot{\mathfrak D}
+\def\Egot{\mathfrak E}
+\def\Fgot{\mathfrak F}
+\def\Ggot{\mathfrak G}
+\def\Hgot{\mathfrak H}
+\def\Igot{\mathfrak I}
+\def\Jgot{\mathfrak J}
+\def\Kgot{\mathfrak K}
+\def\Lgot{\mathfrak L}
+\def\Mgot{\mathfrak M}
+\def\Ngot{\mathfrak N}
+\def\Ogot{\mathfrak O}
+\def\Pgot{\mathfrak P}
+\def\Qgot{\mathfrak Q}
+\def\Rgot{\mathfrak R}
+\def\Sgot{\mathfrak S}
+\def\Tgot{\mathfrak T}
+\def\Ugot{\mathfrak U}
+\def\Vgot{\mathfrak V}
+\def\Wgot{\mathfrak W}
+\def\Xgot{\mathfrak X}
+\def\Ygot{\mathfrak Y}
+\def\Zgot{\mathfrak Z}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+%--------------------- COMMANDES -----------------------------
+
+\newcommand{\bfit}{\bfseries\itshape}
+\def\disp{\displaystyle}
+\newcommand{\dsum}{\displaystyle\sum }
+\newcommand{\dprod}{\displaystyle\prod }
+\newcommand{\dint}{\displaystyle\int}
+\newcommand{\barre}[1]{\overline{#1}}
+\newcommand{\norme}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\bnorme}[1]{\big\Vert #1 \big\Vert}
+\newcommand{\Bnorme}[1]{\Big\Vert #1 \Big\Vert}
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\babs}[1]{\big\vert #1 \big\vert}
+\newcommand{\Babs}[1]{\Big\vert #1 \Big\vert}
+\newcommand{\pa}[1]{\left( #1 \right)}
+\newcommand{\bpa}[1]{\big( #1 \big)}
+\newcommand{\Bpa}[1]{\Big( #1 \Big)}
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\bset}[1]{\big\{ #1 \big\}}
+
+% \newcommand{\fou}[1]{\widehat{#1}}
+% \newcommand{\normei}[1]{\vert \hspace{-.5mm} \vert \hspace{-.5mm} \vert #1 \vert \hspace{-.5mm} \vert \hspace{-.5mm} \vert}
+\newcommand{\fleche}[1]{\overrightarrow{#1}}
+\newcommand{\nsqrt}[2]{\sqrt[\leftroot{4}\uproot{2}#1]{#2}}
+
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}
+\newcommand{\interv}[2]{\llbracket #1,#2\rrbracket}
+
+\def\eps{\varepsilon}
+\def\epsilon{\varepsilon}
+
+
+\DeclareMathOperator{\Reel}{Re}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Id}{id}
+\DeclareMathOperator{\I}{I}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\tr}{Tr}
+\DeclareMathOperator{\Det}{Det}
+\DeclareMathOperator{\rg}{rg}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Image}{Im}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\PGCD}{PGCD}
+\DeclareMathOperator{\PPCM}{PPCM}
+\DeclareMathOperator{\Mat}{Mat}
+\DeclareMathOperator{\Pass}{Pass}
+\DeclareMathOperator{\val}{val}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Card}{Card}
+\DeclareMathOperator{\Vect}{Vect}
+\DeclareMathOperator{\dimension}{dim}
+\DeclareMathOperator{\ch}{ch}
+\DeclareMathOperator{\sh}{sh}
+\DeclareMathOperator{\tgh}{th}
+\DeclareMathOperator{\Arcsin}{Arcsin}
+\DeclareMathOperator{\Arccos}{Arccos}
+\DeclareMathOperator{\Arctan}{Arctan}
+\DeclareMathOperator{\Argsh}{Argsh}
+\DeclareMathOperator{\Argch}{Argch}
+\DeclareMathOperator{\Argth}{Argth}
+\DeclareMathOperator{\Arg}{arg}
+\DeclareMathOperator{\aire}{aire}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\cotan}{cotan}
+\DeclareMathOperator{\grad}{grad}
+\DeclareMathOperator{\rot}{rot}
+
+
+\renewcommand{\Re}{\Reel}
+\renewcommand{\Im}{\Image}
+
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\i}{\mathrm{i}}
+\renewcommand{\j}{\mathrm{j}}
+
+\definecolor{myred}{rgb}{0.8,0,0}
+\definecolor{mygreen}{rgb}{0,0.5,0}
+\definecolor{myblue}{rgb}{0,0,0.5}
+\definecolor{mongris}{gray}{0.5}
+
+
+%------------- Hauts et bas de pages -------------------------
+
+% 
+% \renewcommand{\headrulewidth}{0.4pt}
+% \renewcommand{\chaptermark}[1]{ \markboth{\textbf{\@chapapp{ }\thechapter} - #1}{}}
+% \renewcommand{\sectionmark}[1]{\markright{\textbf{\thesection} - #1}}
+% \renewcommand{\numbull}[1]{#1}
+% \fancyhead{}
+% \fancyfoot{}
+
+%-- On va utiliser une police sp�ciale (helvetica) : pour
+%-- cela on d�finit une nouvelle commande "helv"
+
+% \newcommand{\helv}{% 
+% \fontfamily{phv}\fontsize{11}{13}\selectfont}
+
+
+% \fancyhead[RO]{\helv chaptermark - \thepage}
+% \fancyhead[LO]{\helv \numbull}
+% \fancyhead[RE]{\helv \numbull}
+% \fancyhead[LE]{\helv \thepage - chaptermark}
+
+%-- red�finition du style "plain" (utilis� de mani�re automatique
+%-- sur les premi�res pages de chapitre)
+% \fancypagestyle{plain}{%
+% \fancyhf{}
+% \renewcommand{\headrulewidth}{0pt}
+% \renewcommand{\footrulewidth}{0pt}
+% }%
+
+\renewcommand*{\hrulefill}[1][1.5mm]{\leavevmode \leaders \hrule height #1 \hfill \kern 0pt}
+\newcommand*{\hrulefillbis}[2][0pt]{\leavevmode \leaders \hbox to 1pt{\rule[#1]{1pt}{#2}} \hfill \kern 0pt}
+
+%---------------- chapitrage ----------------------
+  
+% \renewcommand{\chaptermark}[1]{ \markboth{{#1}{}}}
+
+
+% \def\@makechapterhead#1{
+% \hrulefill{\huge \bfseries \ #1}\par}
+
+\renewcommand\chapter{%\if@openright\cleardoublepage\else
+\clearpage %\fi
+                    \thispagestyle{plain}%
+                    \global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+                       \if@mainmatter
+                         \refstepcounter{chapter}%
+                         \typeout{\@chapapp\space\thechapter.}%
+                         \addcontentsline{toc}{chapter}%
+                                   {\protect\numberline{\thechapter}#1}%
+                       \else
+                         \addcontentsline{toc}{chapter}{#1}%
+                       \fi
+                    \else
+                      \addcontentsline{toc}{chapter}{#1}%
+                    \fi
+                    \chaptermark{#1}%
+                    \addtocontents{lof}{\protect\addvspace{10\p@}}%
+                    \addtocontents{lot}{\protect\addvspace{10\p@}}%
+                    \if@twocolumn
+                      \@topnewpage[\@makechapterhead{#2}]%
+                    \else
+                      \@makechapterhead{#2}%
+                      \@afterheading
+                    \fi}
+%%%%%%%%%%%%%
+%%%%%%%%%%%%%
+
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+  %% debut perso %%
+  %% nouveau
+  \begin{flushright}
+%   \setlength{\arrayrulewidth}{2pt}
+%   %%-- tout d'abord calcul de la largeur de la minipage 
+%   \newdimen\largeurbandechapitre
+%   \largeurbandechapitre=\textwidth
+%   \advance\largeurbandechapitre by-\tabcolsep		    
+%   \advance\largeurbandechapitre by-\tabcolsep	 		
+%   \begin{tabular}{>{\columncolor{myblue}}r}
+%   \hline
+%      \begin{minipage}{\largeurbandechapitre}
+% 	\vspace{0.4cm}
+% 	\begin{flushright}
+%   	\helv
+%    	\ifnum \c@secnumdepth >\m@ne
+%       	  \if@mainmatter
+% 	    \setlength{\fboxsep}{3pt}
+%             \huge\bfseries \@chapapp \space \thechapter
+%             \par\nobreak
+%             \vskip 20\p@
+%       	  \fi
+%     	\fi
+%     	\interlinepenalty\@M
+    	\hrulefill \ \ {\huge \bfseries #1}\par\nobreak
+
+		
+  	\end{flushright}
+%   	\vspace{0.5cm}
+%      \end{minipage} \\
+%   \hline
+%   \end{tabular}
+%   \end{flushright}
+  %% fin nouveau
+    \medskip	  
+    \vskip 40\p@
+  }}
+\def\@schapter#1{\if@twocolumn
+                   \@topnewpage[\@makeschapterhead{#1}]%
+                 \else
+                   \@makeschapterhead{#1}%
+                   \@afterheading
+                 \fi}
+\def\@makeschapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \Huge \bfseries  #1\par\nobreak
+    \vskip 40\p@
+  }}
+  
+
+%-------------------------------------------------------
+%  INFO
+%-------------------------------------------------------
+\usepackage{listings}
+\newcommand{\In}{\par\vskip 1mm\hskip-\parindent In}
+\newcommand{\Out}{\par\vskip 1mm\hskip-\parindent Out}
+
+
+%-------------------- envir. Citation : pas convaincant, � oublier ??? 
+
+\newcommand{\jecite}[1]{
+ % \vspace*{-0.3cm}
+\begin{center}
+\begin{minipage}{11cm}
+\begin{small}
+#1
+\end{small}
+\end{minipage}
+\end{center}
+}
+
+%-------------------- Commande page blanche
+
+\newcommand{\pageblanche}{\newpage \thispagestyle{empty} \vspace*{\fill}}
+
+
