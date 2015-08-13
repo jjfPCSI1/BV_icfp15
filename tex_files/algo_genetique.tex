@@ -3,4 +3,34 @@
 
 Afin de sélectionner la meilleure feuille de l'arbre construit par 
 l'algorithme principal, il faut lui attribuer un score pondéré par un certain 
-nombre de paramètres. Ces coefficients de pondération ont été choisis
+nombre de paramètres. Ces coefficients de pondération ont été choisis \ofg{au 
+doigt mouillé} dans un premier temps en fonction de l'intuition que l'on avait 
+de leur effet potentiel, mais une fois l'algorithme laché sur un problème, il 
+n'est pas certain que le choix soit optimal. On a donc décidé d'utiliser un 
+algorithme génétique pour essayer de trouver rapidement un jeu de pondérations 
+qui puissent faire mieux que le jeu par défaut.
+
+\subsection{Idée de l'algorithme génétique}
+
+Le principe de l'algorithme génétique est de faire \ofg{s'affronter} 
+différents jeux de paramètres pour pouvoir les classer en fonction d'un 
+certain critère (ici, ce sera le score total sur l'ensemble des problèmes 
+soumis). Une fois les différents candidats rangés par ordre d'efficacités, on 
+sélectionne les meilleurs et on les \ofg{reproduit} entre eux en mélangeant 
+leurs caractéristiques principales pour former un certains nombre de 
+programmes \ofg{fils}. Les parents et les enfants s'affrontent alors à nouveau 
+sur le jeu de problème et on resélectionne les meilleurs du cheptel pour la 
+reproduction afin de produire une nouvelle génération. Au bout d'un certains 
+nombre de générations (les effets commencent à se faire sentir à partir de la 
+troisième), la \ofg{sélection naturelle} fait ressortir des jeux de paramètres 
+qui peuvent notablement améliorer le score du jeu initial.
+
+\subsection{Sélection initiale des candidats}
+
+\subsection{Organisation du tournoi}
+
+\subsection{Reproduction des meilleurs}
+
+\subsection{Importance des mutations}
+
+
