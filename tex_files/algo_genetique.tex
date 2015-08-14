@@ -27,6 +27,30 @@ qui peuvent notablement améliorer le score du jeu initial.
 
 \subsection{Sélection initiale des candidats}
 
+Le génome initial des candidat est choisi aléatoirement en prenant une valeur 
+entre 0 et 10 pour chacun des 6 paramètres que l'on doit fournir au programme 
+principal. On prend tout de même un candidat correspondant au jeu de 
+paramètres par défaut pour avoir un élément de comparaison et pouvoir décider 
+si le jeu de paramètres trouvés par l'algorithme est meilleur ou non que le 
+jeu initial.
+
+\begin{code}
+\begin{pyverbatim}[][numbers=left]
+ANCETRE = [3,2,1,100,1,100]  # La pondération "naturelle" de base
+CANDIDATS = [ANCETRE]        # Les candidats "préqualifiés" 
+NOMBRE_DE_CANDIDATS= 12      # Pour une génération
+MAX_VAL = 10                 # Pour un paramètre
+NB_PARAMETRES = len(ANCETRE) # Le nombre de paramètres
+
+def cree_candidat():
+    """ Création d'un candidat aléatoire."""
+    return [random.randint(0,MAX_VAL) for j in range(NB_PARAMETRES)]
+        
+for i in range(NOMBRE_DE_CANDIDATS-len(CANDIDATS)):
+    CANDIDATS.append(cree_candidat())
+\end{pyverbatim}
+\end{code}
+
 \subsection{Organisation du tournoi}
 
 \subsection{Reproduction des meilleurs}
