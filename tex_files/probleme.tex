@@ -1,8 +1,59 @@
 \section{Problème posé}
 
 \subsection{Description rapide}
-Le problème a résoudre consistait à écrire un programme jouant tout seul à TETRIS$^\circledR$
+Le problème à résoudre consiste à écrire un programme jouant tout seul à TETRIS$^\circledR$
 sur une grille hexagonale.
+
+L'ensemble des pièces à utiliser est propre à chaque plateau et la pièce à poser est déterminée
+par un générateur pseudo-aléatoire fixé.
+
+Chaque pièce posée de manière définitive (dans la suite on dira qu'elle a été \emph{vérouillée})
+permet de marquer des points.
+
+Chaque mouvement possible d'une pièce peut être représenté par plusieurs caractères et la solution
+doit être présentée sous la forme d'une chaîne de caractères.
+
+L'ambigüité sur la représentation d'un mouvement permet l'inclusion de mots intelligibles dans 
+une solution tout en préservant son sens et son impact sur le plateau.
+
+Dix-huit phrases spéciales peuvent être incluses dans les solutions pour gagner des points.
+
+Il s'agit donc de jouer au mieux tout en faisant apparaître le plus de phrases spéciales dans 
+la solution.
+
+\subsection{Plateau et système de coordonnée}
+Le plateau est une grille hexagonale bidimensionnel de cellules.
+
+Une cellule a deux états : \emph{libre} ou \emph{occupée}.
+
+Les rangées de la grille sont disposées en quinconce et on en déduit le système de coordonnées
+suivant présenté dans la figure~\ref{fig:hexcoord1}
+\begin{figure}
+    \caption{\label{fig:hexcoord1}Système de coordonnées pour la grille hexagonale}
+\ifdessins
+\centering
+\begin{tikzpicture}[scale=2, every node/.style={transform shape}]
+    \hexgrid{9}{9}
+    \foreach \x in {0,...,9} {
+    \foreach \y in {0,...,9} {
+        \node at (h\x;\y.center) {\tiny \x,\y};
+    }
+    }
+\end{tikzpicture}
+\fi
+\end{figure}
+
+Notons tout de suite que ce système de coordonnées a le problème suivant : les déplacements
+dans la grille ne sont pas proportionnel à des déplacements géométrique. En effet, si on souhaite passer effectuer une translation d'un cran en bas à droite (ce qui sera défini comme le mouvement
+$\searrow$ au paragraphe~\ref{par:moves}) on ne peut pas se contenter d'ajouter $(1,1)$ 
+aux coordonnées car si le point $(4,7)$ devient effectivement $(5,8)$ après cette translation,
+le point $(4,6)$ devient $(4,7)$. Tout dépend de la parité de la rangée sur laquelle un point
+se situe.
+
+\subsection{Données initiales}
+\subsection{Mouvements et verrouillage}
+\label{par:moves}
+\subsection{Suppression de ligne}
 
 \begin{figure}
     \caption{\label{fig:prob7}Un exemple de partie avec (a) la disposition du plateau en début de partie, (b) les différents types de pièces et (c) une disposition en fin de partie}
