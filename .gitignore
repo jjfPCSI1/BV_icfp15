@@ -6,5 +6,5 @@
 *.swp
 *~
 *.pytxcode
-pythontex-files-*
+pythontex*
 *.depytx
