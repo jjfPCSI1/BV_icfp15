@@ -1,0 +1,90 @@
+    \begin{tabular}{c|l}
+        $G_r(p)\sim \Z/k\Z$ & Exemple \\ \hline
+        $k=6$ & 
+\ifdessins
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{0/1,1/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{1/0,1/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{2/0,1/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{2/1,1/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{2/2,1/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{1/2,1/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+\fi
+    \\
+$k=3$ &
+\ifdessins
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{0/1,1/1,2/1}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{1/0,1/1,2/2}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{2/0,1/1,1/2}
+        \pivot{1}{1}
+    \end{tikzpicture}
+\fi
+\\
+$k=2$ & 
+\ifdessins
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{1/0,2/1,1/2}
+        \pivot{1}{1}
+    \end{tikzpicture}
+    {\Large $\circlearrowright$}
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{0/1,2/0,2/2}
+        \pivot{1}{1}
+    \end{tikzpicture}
+\fi
+\\
+$k=1$ & 
+\ifdessins
+    \begin{tikzpicture}
+        \hexcell{0}{0}
+        \pivot{0}{0}
+    \end{tikzpicture} ,
+    \begin{tikzpicture}
+        \hexgrid{2}{2}
+        \unit{1/0,2/0,0/1,1/1,2/1,1/2,2/2}
+        \pivot{1}{1}
+    \end{tikzpicture} 
+\fi
+\end{tabular}
