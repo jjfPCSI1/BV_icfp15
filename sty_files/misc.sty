@@ -9,6 +9,20 @@
 \renewcommand{\thesubsubsection}{\roman{subsubsection}}
 \renewcommand\FrenchLabelItem{$\bullet$}
 
+%% Pour PythonTex
+\usepackage[makestderr]{pythontex}
+
+\newenvironment{code}[1][]{%
+\begin{mdframed}[linecolor=Green,innerrightmargin=30pt,innerleftmargin=30pt,
+backgroundcolor=Black!5,
+skipabove=10pt,skipbelow=10pt,roundcorner=5pt,
+splitbottomskip=6pt,splittopskip=12pt]
+}{%
+\end{mdframed}
+}
+
+\usepackage[framemethod=TikZ]{mdframed}
+
 %% Rendre les guillemets ('«' et '»') actifs.
 %%
 %% Attention, cela implique de ne pas mettre d'espace après '«'
