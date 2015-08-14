@@ -53,8 +53,88 @@ for i in range(NOMBRE_DE_CANDIDATS-len(CANDIDATS)):
 
 \subsection{Organisation du tournoi}
 
+Le tournoi en lui-même consiste simplement à appeler l'exécutable Caml sur les 
+problèmes voulus avec les paramètres portés par chaque candidat. On récupère 
+le score obtenu sur chaque problème de sorte à pouvoir classer les candidats 
+en fonction de leur score total sur l'ensemble des problèmes que l'on choisit 
+de tester afin d'obtenir un jeu de paramètre qui réussisse au mieux dans la 
+plupart des cas qui se présentent. Afin de conserver une trace écrite, on 
+rentre les résultats pour chaque problème dans la base de données 
+préalablement initialisée.
+
 \subsection{Reproduction des meilleurs}
 
-\subsection{Importance des mutations}
+Après sélection des 4 meilleurs de la génération en cours, on les 
+\ofg{reproduit} deux à deux pour essayer de trouver les \ofg{gènes} qui ont 
+permis cette réussite. On pondère le mélange de gènes en fonction de la 
+réussite au tournoi précédent de sorte à favoriser légèrement le plus fort. 
+Néanmoins, on introduit un brin d'aléatoire de deux manières différentes:
+\begin{enumerate}
+	\item	9 fois sur 10, on fait la moyenne pondérée des gènes des deux 
+	reproducteurs avec le poids précédent auquel on rajoute un facteur 
+	(positif ou négatif) aléatoire pour s'assurer que tous les gènes ne sont 
+	pas mélangés toujours dans les mêmes proportions\footnote{On peut très 
+	bien hériter des yeux de sa mère et pourtant avoir globalement le même 
+	visage que son père comme Harry Potter.}.
+	
+	\item	1 fois sur 10, une mutation majeure intervient et les gènes 
+	parentaux sont tout bonnement ignorés. Le gène de l'enfant est alors tiré 
+	de manière aléatoire sur l'ensemble des valeurs initialement prévues.
+	
+\end{enumerate}
 
+\begin{code}
+\begin{pyverbatim}[][numbers=left]
+def reproduction(p1,r1,p2,r2):
+    """ Mélange des gènes pour p1 et p2. Renvoie un enfant. 
+    r1 et r2 sont les résultats respectivement pour p1 et p2. """
+    poids = r1/(r1+r2)
+    enfant = []
+    for i in range(NB_PARAMETRES):
+        # 9 fois sur 10, c'est le mixage normal
+        if random.randint(0,9) < 9: 
+            # On met un peu d'aléatoire dans le mélange
+            coeff = poids + (-1)**random.randint(0,1) * random.random()
+            enfant.append(int(coeff*p1[i] + (1-coeff)*p2[i]))
+        else: # Sinon, mutation aléatoire
+            enfant.append(random.randint(0,MAX_VAL))
+    return enfant
+\end{pyverbatim}
+\end{code}
 
+\subsection{Importance des mutations et du sang neuf}
+
+Tout comme dans la vraie vie, le consanguinisme guette dès que l'on procède à 
+la reproduction des candidats. C'est d'autant plus vrai ici que le programme 
+Caml impose aux paramètres d'être des entiers. Même avec un soupçon 
+d'aléatoire dans le brassage, mélanger deux fois la même valeur pour un 
+paramètre donné redonne la même valeur et si cette valeur fournit 
+effectivement un avantage dans le tournoi, les meilleurs places seront brigués 
+par les mêmes candidats et il n'y aura plus d'évolution qui pourrait permettre 
+de trouver un jeu de paramètre inédit et qui amènerait pourtant de meilleurs 
+résultats. C'est pourquoi les mutations sont particulièrement importantes et 
+leur pourcentage d'apparition (ici $10\%$ de chance) est un paramètre sur 
+lequel on peut jouer pour optimiser l'algorithme génétique lui-même.
+
+Néanmoins, ces mutations peuvent ne pas être suffisantes pour explorer 
+efficacement l'espace des paramètres, c'est pourquoi on a choisit de prendre 
+12 candidats pour chaque génération: 
+\begin{itemize}
+	\item Quatre d'entre eux sont issus de la génération 
+précédente et remettent simplement leur titre en jeu. 
+
+	\item Les six suivants sont les candidats \ofg{fils} qui
+correspondent aux six appariements deux à deux des quatre candidats précédents.
+
+	\item	Enfin, les deux places restantes sont constitués d'individus au 
+	génome totalement nouveau et choisi aléatoirement pour permettre 
+	d'explorer d'autres possibilités.
+
+\end{itemize}
+
+L'ensemble permet assez rapidement de trouver de nouveaux arrangements qui 
+améliorent sensiblement les choix initiaux, les points forts de chaque 
+individus étant patiemment sélectionnés pour se développer lors des 
+générations ultérieures.
+
+\subsection{Remarque concernant les calculs à faire}
