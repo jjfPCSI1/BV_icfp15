@@ -1,41 +1,75 @@
-
 \tikzset{
-    hexgrid/.style= {shape=regular polygon,regular polygon sides=6,minimum size=1cm, draw,inner sep=0,anchor=south,fill=white,rotate=30}
+    filled/.style= {fill=black},
+    piecea/.style= {fill=gray!20},
+    pieceb/.style= {fill=gray!50},
+    piecec/.style= {fill=gray!80},
+    pieced/.style= {fill=gray},
+    piecee/.style= {fill=gray!20,pattern=horizontal lines},
+    piecef/.style= {fill=gray!20,pattern=vertical lines},
+    pieceg/.style= {fill=gray!20,pattern=north east lines},
+    pieceh/.style= {fill=gray!20,pattern=north west lines},
+    piecei/.style= {fill=gray!20,pattern=grid},
+    piecej/.style= {fill=gray!20,pattern=crosshatch},
+    piecek/.style= {fill=gray!20,pattern=dots},
+    piecel/.style= {fill=gray!20,pattern=crosshatch dots},
+    piecem/.style= {fill=gray!20},
+    piecen/.style= {fill=gray!50},
+    pieceo/.style= {fill=gray!80},
+    piecep/.style= {fill=gray},
+    pieceq/.style= {fill=gray!20,pattern=horizontal lines},
+    piecer/.style= {fill=gray!20,pattern=vertical lines},
+    pieces/.style= {fill=gray!20,pattern=north east lines},
+    hexgrid/.style= {shape=regular polygon,regular polygon sides=6,minimum size=0.4cm, draw,inner sep=0,anchor=south,fill=white,rotate=30},
+    hexcell/.style= {shape=regular polygon,regular polygon sides=6,minimum size=0.4cm, draw,inner sep=0,anchor=south,rotate=30},
+    hexcell/.default=gray!50
 }
-\tikzset{
-    hexcell/.style= {shape=regular polygon,regular polygon sides=6,minimum size=1cm, draw,inner sep=0,anchor=south,fill=gray!50,rotate=30}
-}
-
 \newcommand{\hexgrid}[2]{
     \foreach \x in {0,...,#1} {
     \foreach \y in {0,...,#2} {
         \pgfmathparse{mod(\y,2)};
         \node[hexgrid]
-            (h\x;\y) at (0.45*\pgfmathresult+1.75*\x*0.5,-1.5*\y*0.5) {};
+            (h\x;\y) at (0.4*0.45*\pgfmathresult+0.4*1.75*\x*0.5,0.4*-1.5*\y*0.5) {};
     }
     }
 }
 
 \newcommand{\hexcell}[2]{
-    \node[hexcell] at (h#1;#2.south) {};
+    \node[hexcell,pieced] at (h#1;#2.south) {};
 }
 \newcommand{\pivot}[2]{
-    \fill[black] (h#1;#2.center) circle (2pt);
-    \draw[black] (h#1;#2.center) circle (5pt);
+    \fill[white] (h#1;#2.center) circle (0.4*5pt);
+    \fill[black] (h#1;#2.center) circle (0.4*2pt);
+    \draw[black] (h#1;#2.center) circle (0.4*5pt);
 }
 
-\renewcommand{\unit}[1]{
+\newcommand{\unit}[1]{
     \foreach \x/\y in {#1} {
         \hexcell{\x}{\y}
     }
 }
 
-\newcommand{\CW}[2]{
-    \draw [->,very thick] (h#1;#2.center) ++(330:.2cm) arc (330:0:.2cm);
+\newcommand{\punit}[2]{
+    \foreach \x/\y in {#1} {
+        \node[hexcell,piece#2] at (h\x;\y.south) {};
+    }
 }
-\newcommand{\CCW}[2]{
-    \draw [->,very thick] (h#1;#2.center) ++(30:.2cm) arc (30:360:.2cm);
+
+\newcommand{\mCW}[2]{%
+    \draw [->,very thick] (h#1;#2.center) ++(330:0.4cm) arc (330:0:0.4cm);
 }
-\newcommand{\mSE}[2]{
-    \draw [->,very thick] (h#1;#2.center) ++(-60:.21cm) -- ++(-60:.5cm);
+\newcommand{\mCCW}[2]{%
+    \draw [->,very thick] (h#1;#2.center) ++(30:0.4cm) arc (30:360:0.4cm);
 }
+\newcommand{\mW}[2]{%
+    \draw [->,very thick] (h#1;#2.center) -- +(-0.4,0);
+}
+\newcommand{\mE}[2]{%
+    \draw [->,very thick] (h#1;#2.center) -- +(0.4,0);
+}
+\newcommand{\mSE}[2]{%
+    \draw [->,very thick] (h#1;#2.center) -- +(.2,-0.4);
+}
+\newcommand{\mSW}[2]{%
+    \draw [->,very thick] (h#1;#2.center) -- +(-.2,-0.4);
+}
+
