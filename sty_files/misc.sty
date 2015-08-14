@@ -10,7 +10,9 @@
 \renewcommand\FrenchLabelItem{$\bullet$}
 
 %% Pour PythonTex
-\usepackage[makestderr,depythontex]{pythontex}
+% NB: avec l'option depythontex, le syntax_highlight ne marche pas...
+% en plus, depythontex ne semble pas fonctionner même avec le fichier le plus simple...
+\usepackage[makestderr]{pythontex} 
 %\usepackage[svgnames]{xcolor}  % -> mis dans BV.sty
 
 \newenvironment{code}[1][]{%
