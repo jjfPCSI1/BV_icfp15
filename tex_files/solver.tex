@@ -20,98 +20,10 @@ Pour une position donnée du pivot, on a donc autant de possibilités pour la pièc
 d'éléments dans $G_r(p) = R(p) / I(p)$ (tous ces groupes sont abéliens). 
 
 Comme $R(p) \sim \Z/6\Z$ on a quatre cas pour $G_r(p)$ qui sont illustrés dans la figure~\ref{fig:cassym}.
+
 \begin{figure}
     \caption{\label{fig:capssym}Les quatre cas pour le groupe $G_r(p)$}
-    \begin{tabular}{c|l}
-        $G_r(p)\sim \Z/k\Z$ & Exemple \\ \hline
-        $k=6$ & 
-\ifdessins
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{0/1,1/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{1/0,1/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{2/0,1/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{2/1,1/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{2/2,1/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{1/2,1/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-\fi
-    \\
-$k=3$ &
-\ifdessins
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{0/1,1/1,2/1}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{1/0,1/1,2/2}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{2/0,1/1,1/2}
-        \pivot{1}{1}
-    \end{tikzpicture}
-\fi
-\\
-$k=2$ & 
-\ifdessins
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{1/0,2/1,1/2}
-        \pivot{1}{1}
-    \end{tikzpicture}
-    {\Large $\circlearrowright$}
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{0/1,2/0,2/2}
-        \pivot{1}{1}
-    \end{tikzpicture}
-\fi
-\\
-$k=1$ & 
-\ifdessins
-    \begin{tikzpicture}
-        \hexcell{0}{0}
-        \pivot{0}{0}
-    \end{tikzpicture} ,
-    \begin{tikzpicture}
-        \hexgrid{2}{2}
-        \unit{1/0,2/0,0/1,1/1,2/1,1/2,2/2}
-        \pivot{1}{1}
-    \end{tikzpicture} 
-\fi
-\end{tabular}
+    \input{dessins/cassym.tex}
 \end{figure}
 
 On peut alors représenter uniquement la position d'une pièce à symétrie près par un couple 
@@ -132,4 +44,7 @@ $V_{x,y,k}$ indique si la position où le pivot est en $(x,y)$ et la rotation est
 à $k$ est visitée.~\footnote{Durant le concours, en raison de la présence du bord $b$ à calculer 
 et des problèmes potentiels, nous avons uniquement utilisé une liste de positions visitées ce 
 qui est bien entendu plus couteux mais plus sûr lorsque l'on dispose de peu de temps.}
+
+Pour maintenir la valeur de $k$ à jour lors des mouvements, il suffit de remarquer qu'une rotation 
+revient à ajouter $\overline{\pm 1}$ dans $G_r(p)$.
 
