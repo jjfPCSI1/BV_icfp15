@@ -1,24 +1,66 @@
+\ifcouleur
+    \definecolor{cola}{RGB}{255,0,0}
+    \definecolor{colb}{RGB}{0,255,0}
+    \definecolor{colc}{RGB}{0,0,255}
+    \definecolor{cold}{RGB}{255,255,0}
+    \definecolor{cole}{RGB}{0,255,255}
+    \definecolor{colf}{RGB}{255,0,255}
+    \definecolor{colg}{RGB}{128,128,255}
+    \definecolor{colh}{RGB}{255,128,128}
+    \definecolor{coli}{RGB}{128,255,128}
+    \definecolor{colj}{RGB}{255,128,64}
+    \definecolor{colk}{RGB}{64,255,128}
+    \definecolor{coll}{RGB}{255,64,128}
+    \definecolor{colm}{RGB}{128,255,64}
+    \definecolor{coln}{RGB}{64,128,255}
+    \definecolor{colo}{RGB}{128,64,255}
+    \tikzset{
+        filled/.style= {fill=black},
+        piecea/.style= {fill=cola},
+        pieceb/.style= {fill=colb},
+        piecec/.style= {fill=colc},
+        pieced/.style= {fill=cold},
+        piecee/.style= {fill=cole},
+        piecef/.style= {fill=colf},
+        pieceg/.style= {fill=colg},
+        pieceh/.style= {fill=colh},
+        piecei/.style= {fill=coli},
+        piecej/.style= {fill=colj},
+        piecek/.style= {fill=colk},
+        piecel/.style= {fill=coll},
+        piecem/.style= {fill=colm},
+        piecen/.style= {fill=coln},
+        pieceo/.style= {fill=colo},
+        piecep/.style= {fill=cola},
+        pieceq/.style= {fill=colb},
+        piecer/.style= {fill=colc},
+        pieces/.style= {fill=cold}
+    }
+\else
+    \tikzset{
+        filled/.style= {fill=black},
+        piecea/.style= {fill=gray!20},
+        pieceb/.style= {fill=gray},
+        piecec/.style= {fill=gray!80},
+        pieced/.style= {fill=gray!50},
+        piecee/.style= {fill=gray!20,pattern=horizontal lines},
+        piecef/.style= {fill=gray!20,pattern=vertical lines},
+        pieceg/.style= {fill=gray!20,pattern=north east lines},
+        pieceh/.style= {fill=gray!20,pattern=north west lines},
+        piecei/.style= {fill=gray!20,pattern=grid},
+        piecej/.style= {fill=gray!20,pattern=crosshatch},
+        piecek/.style= {fill=gray!20,pattern=dots},
+        piecel/.style= {fill=gray!20,pattern=crosshatch dots},
+        piecem/.style= {fill=gray!20},
+        piecen/.style= {fill=gray!50},
+        pieceo/.style= {fill=gray!80},
+        piecep/.style= {fill=gray},
+        pieceq/.style= {fill=gray!20,pattern=horizontal lines},
+        piecer/.style= {fill=gray!20,pattern=vertical lines},
+        pieces/.style= {fill=gray!20,pattern=north east lines}
+    }
+\fi
 \tikzset{
-    filled/.style= {fill=black},
-    piecea/.style= {fill=gray!20},
-    pieceb/.style= {fill=gray!50},
-    piecec/.style= {fill=gray!80},
-    pieced/.style= {fill=gray},
-    piecee/.style= {fill=gray!20,pattern=horizontal lines},
-    piecef/.style= {fill=gray!20,pattern=vertical lines},
-    pieceg/.style= {fill=gray!20,pattern=north east lines},
-    pieceh/.style= {fill=gray!20,pattern=north west lines},
-    piecei/.style= {fill=gray!20,pattern=grid},
-    piecej/.style= {fill=gray!20,pattern=crosshatch},
-    piecek/.style= {fill=gray!20,pattern=dots},
-    piecel/.style= {fill=gray!20,pattern=crosshatch dots},
-    piecem/.style= {fill=gray!20},
-    piecen/.style= {fill=gray!50},
-    pieceo/.style= {fill=gray!80},
-    piecep/.style= {fill=gray},
-    pieceq/.style= {fill=gray!20,pattern=horizontal lines},
-    piecer/.style= {fill=gray!20,pattern=vertical lines},
-    pieces/.style= {fill=gray!20,pattern=north east lines},
     hexgrid/.style= {shape=regular polygon,regular polygon sides=6,minimum size=0.4cm, draw,inner sep=0,anchor=south,fill=white,rotate=30},
     hexcell/.style= {shape=regular polygon,regular polygon sides=6,minimum size=0.4cm, draw,inner sep=0,anchor=south,rotate=30},
     hexcell/.default=gray!50
@@ -34,7 +76,7 @@
 }
 
 \newcommand{\hexcell}[2]{
-    \node[hexcell,pieced] at (h#1;#2.south) {};
+    \node[hexcell,pieceb] at (h#1;#2.south) {};
 }
 \newcommand{\pivot}[2]{
     \fill[white] (h#1;#2.center) circle (0.4*5pt);
@@ -73,3 +115,9 @@
     \draw [->,very thick] (h#1;#2.center) -- +(-.2,-0.4);
 }
 
+\newcommand{\sCW}{\circlearrowright}
+\newcommand{\sCCW}{\circlearrowleft}
+\newcommand{\sE}{\rightarrow}
+\newcommand{\sW}{\leftarrow}
+\newcommand{\sSW}{\swarrow}
+\newcommand{\sSE}{\searrow}
