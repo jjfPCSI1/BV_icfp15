@@ -19,8 +19,8 @@ soumis). Une fois les différents candidats rangés par ordre d'efficacités, on
 sélectionne les meilleurs et on les \ofg{reproduit} entre eux en mélangeant 
 leurs caractéristiques principales pour former un certains nombre de 
 programmes \ofg{fils}. Les parents et les enfants s'affrontent alors à nouveau 
-sur le jeu de problème et on resélectionne les meilleurs du cheptel pour la 
-reproduction afin de produire une nouvelle génération. Au bout d'un certains 
+sur le jeu de problèmes et on resélectionne les meilleurs du cheptel pour la 
+reproduction afin de produire une nouvelle génération. Au bout d'un certain
 nombre de générations (les effets commencent à se faire sentir à partir de la 
 troisième), la \ofg{sélection naturelle} fait ressortir des jeux de paramètres 
 qui peuvent notablement améliorer le score du jeu initial.
@@ -60,9 +60,9 @@ Néanmoins, on introduit un brin d'aléatoire de deux manières différentes:
 	\item	9 fois sur 10, on fait la moyenne pondérée des gènes des deux 
 	reproducteurs avec le poids précédent auquel on rajoute un facteur 
 	(positif ou négatif) aléatoire pour s'assurer que tous les gènes ne sont 
-	pas mélangés toujours dans les mêmes proportions\footnote{On peut très 
-	bien hériter des yeux de sa mère et pourtant avoir globalement le même 
-	visage que son père comme Harry Potter.}.
+	pas mélangés toujours dans les mêmes proportions\footnote{Comme Harry 
+	Potter, on peut très bien hériter des yeux de sa mère et pourtant avoir 
+	globalement le même visage que son père.}.
 	
 	\item	1 fois sur 10, une mutation majeure intervient et les gènes 
 	parentaux sont tout bonnement ignorés. Le gène de l'enfant est alors tiré 
@@ -80,25 +80,25 @@ Tout comme dans la vraie vie, le consanguinisme guette dès que l'on procède à
 la reproduction des candidats. C'est d'autant plus vrai ici que le programme 
 Caml impose aux paramètres d'être des entiers. Même avec un soupçon 
 d'aléatoire dans le brassage, mélanger deux fois la même valeur pour un 
-paramètre donné redonne la même valeur et si cette valeur fournit 
+paramètre donné redonne la même valeur. Si cette valeur fournit 
 effectivement un avantage dans le tournoi, les meilleurs places seront brigués 
-par les mêmes candidats et il n'y aura plus d'évolution qui pourrait permettre 
+par les mêmes candidats. Il n'y aura plus d'évolution qui pourrait permettre 
 de trouver un jeu de paramètre inédit et qui amènerait pourtant de meilleurs 
 résultats. C'est pourquoi les mutations sont particulièrement importantes et 
 leur pourcentage d'apparition (ici $10\%$ de chance) est un paramètre sur 
 lequel on peut jouer pour optimiser l'algorithme génétique lui-même.
 
 Néanmoins, ces mutations peuvent ne pas être suffisantes pour explorer 
-efficacement l'espace des paramètres, c'est pourquoi on a choisit de prendre 
+efficacement l'espace des paramètres, c'est pourquoi on a choisi de prendre 
 12 candidats pour chaque génération: 
 \begin{itemize}
 	\item Quatre d'entre eux sont issus de la génération 
-précédente et remettent simplement leur titre en jeu. 
+précédente et remettent simplement leur titre en jeu\footnotemark{}. 
 
 	\item Les six suivants sont les candidats \ofg{fils} qui
 correspondent aux six appariements deux à deux des quatre candidats précédents.
 
-	\item	Enfin, les deux places restantes sont constitués d'individus au 
+	\item	Enfin, les deux places restantes sont constituées d'individus au 
 	génome totalement nouveau et choisi aléatoirement pour permettre 
 	d'explorer d'autres possibilités.
 
@@ -109,14 +109,14 @@ améliorent sensiblement les choix initiaux, les points forts de chaque
 individus étant patiemment sélectionnés pour se développer lors des 
 générations ultérieures.
 
-\subsection{Remarque concernant les calculs à faire}
+%\subsection{Remarque concernant les calculs à faire}
 
-Bien entendu, comme il n'y a pas d'aléatoire dans le problème et que chaque 
-joueur joue absolument seul, il ne sert à rien de faire tourner à nouveau les 
-jeux de paramètres des parents dans le nouveau tournoi vu qu'ils donneront 
-exactement le même résultat qu'avant (ce ne serait pas le cas par exemple dans 
-un jeu où l'on affronte un autre joueur en combat singulier et que notre 
-stratégie peut être dépendante des mouvements de l'adversaire). C'est pourquoi 
-les résultats ont été stockés dans une base de données \texttt{sqlite3} et seuls 
-les calculs sur les candidats fils ainsi que les nouveaux candidats aléatoires 
-sont utilisés.
+\footnotetext{Bien entendu, comme il n'y a pas d'aléatoire dans le problème et 
+que chaque joueur joue absolument seul, il ne sert à rien de faire tourner à 
+nouveau les jeux de paramètres des parents dans le nouveau tournoi vu qu'ils 
+donneront exactement le même résultat qu'avant (ce ne serait pas le cas par 
+exemple dans un jeu où l'on affronte un autre joueur en combat singulier et 
+que notre stratégie peut être dépendante des mouvements de l'adversaire). 
+C'est pourquoi les résultats ont été stockés dans une base de données 
+\texttt{sqlite3} et seuls les calculs sur les candidats fils ainsi que les 
+nouveaux candidats aléatoires sont utilisés.}
