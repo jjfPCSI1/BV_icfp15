@@ -50,10 +50,115 @@ aux coordonnées car si le point $(4,7)$ devient effectivement $(5,8)$ après cett
 le point $(4,6)$ devient $(4,7)$. Tout dépend de la parité de la rangée sur laquelle un point
 se situe.
 
+\subsection{Pièces}
+Une pièce est déterminée par un ensemble de cases qu'elle occupe en position neutre
+et la donnée d'un point sur la grille appelé son pivot, qui n'est pas nécessairement 
+une des cases occupées et dont les coordonnées peuvent sortir du plateau.
+
+Voici des exemples de pièces où les cases vides sont \ifcouleur colorées \else grisées \fi
+et le pivot est indiqué par un cercle au centre de la cellule sur laquelle il se situe :
+\input{dessins/exemple_pieces.tex}
+
 \subsection{Données initiales}
+Chaque instance du problème à résoudre est décrit par un sextuplet 
+$(w,h,\mathcal{O},N,\overline{g},\overline{p})$ où
+\begin{description}
+    \item[$w\times h$] les dimensions du plateau
+    \item[$\mathcal{O}$] l'ensemble des cases déjà occupées
+    \item[$N$] le nombre de pièces à placer lors de chaque partie
+    \item[$\overline{g} = (g_1,\dot,g_m)$] les germes des parties à jouer
+    \item[$\overline{p} = (p_1,\dot,p_n)$] les différents types de pièces disponibles.
+\end{description}
+
+\subsection{Générateur pseudo-aléatoire}
+Afin de déterminer la pièce courante un générateur pseudo-aléatoire est utilisé
+avec un germe donné dans la description de l'instance.
+
+On commence par définir la suite congruente linéaire $(u_n)_{n\in \N}$
+où $u_0$ est le germe et 
+\[
+\forall n\in \N, u_{n+1} = (1103515245 u_n + 12345) \mod 2^{32}
+\]
+
+Le générateur pseudo-aléatoire $v_n$ correspond aux bits 16 à 30, en commençant à numéroter 0 le 
+bit de poids faible, de la suite $u_n$. Soit avec une formule mathématique :
+\[
+\forall n \in \N, v_n = \left\lfloor \frac{u_n}{2^{16}} \right\rfloor \mod 2^{15}
+\]
+
 \subsection{Mouvements et verrouillage}
 \label{par:moves}
+
+Pour déplacer une pièce on dispose de six mouvements :
+\begin{description}
+    \item[$\sW$] mouvement d'un cran à gauche (Ouest)
+    \item[$\sE$] mouvement d'un cran à droite (Est)
+    \item[$\sSW$] mouvement d'un cran à gauche et d'un cran en bas (Sud-Ouest)
+    \item[$\sSE$] mouvement d'un cran à droite et d'un cran en bas (Sud-Est)
+    \item[$\sCCW$] rotation d'un angle $\frac{\pi}{6}$ autour du pivot 
+        (Rotation anti-horaire)
+    \item[$\sCW$] rotation d'un angle $-\frac{\pi}{6}$ autour du pivot 
+        (Rotation horaire)
+\end{description}
+
+Un mouvement est valide si toutes les cellules occupées après celui-ci sont libres.
+
+Lorsqu'on effectue un mouvement invalide la pièce est verrouillée et les cellules qu'elle
+occupe sont marquées comme étant occupées.
+
+La figure~\ref{fig:partie} présente une succession de mouvements aboutissant à un verrouillage.
+\begin{figure}
+    \caption{\label{fig:partie}Succession de mouvements aboutissant à un verrouillage}
+    \input{dessins/exemple_lock.tex}
+\end{figure}
+
 \subsection{Suppression de ligne}
+Lorsque après avoir verrouillé une pièce des rangées du plateau sont entièrement occupées 
+elles sont remplacées par des cases libres et les rangées situées au dessus descendent d'un
+cran (les cases des rangées paires effectue donc un mouvement $\sSW$ et les autres un 
+mouvement $\sSE$).
+
+Un exemple de ce mécanisme est présenté à la figure~\ref{fig:suppression}.
+\begin{figure}
+    \caption{\label{fig:suppression}Disposition d'un plateau avant (a) et après (b) 
+    l'étape de suppression de lignes}
+    \begin{center}
+    (a) \input{dessins/supp_lignes_avant.tex} \qquad
+    (b) \input{dessins/supp_lignes_apres.tex}
+    \end{center}
+\end{figure}
+
+\subsection{Déroulement d'une partie}
+Partant d'une instance $(w,h,\mathcal{O},N,\overline{g},\overline{p})$
+du problème et d'un germe $g_i$, une partie se déroule ainsi :
+\begin{enumerate}
+    \item On initialise le générateur pseudo-aléatoire avec le germe $g_i$.
+    \item On initialise le plateau avec une grille de dimension $w \times h$ et
+        on marque comme étant occupées les cases données par l'ensemble $\mathcal{O}$.
+    \item Tant qu'on n'a pas placé $N$ pièces
+        \begin{enumerate}[i)]
+            \item Soit $k$ généré par le générateur pseudo-aléatoire et 
+                $k' = k \mod n$ où $n$ est le nombre de pièces dans $\overline{p}$.
+            \item On génère une nouvelle pièce $p_{k'}$ en la plaçant au sommet
+                du plateau et en la centrant horizontalement.
+            \item Si cette position n'est pas valide, la partie s'arrête.
+            \item On effectue alors une suite de mouvements aboutissant 
+                à un verrouillage de la pièce.
+            \item Si lors d'un mouvement une pièce a son pivot et les cases
+                qu'elle occupe dans une position déjà prise dans les mouvements 
+                précédents, la partie s'arrête.
+            \item Si nécessaire on supprime les lignes pleines.
+        \end{enumerate}
+\end{enumerate}
+
+Il y a donc trois conditions d'arrêt :
+\begin{itemize}
+    \item soit les $N$ pièces ont été placées ;
+    \item soit une pièce n'a pas pu être générée au sommet du plateau ;
+    \item soit une pièce a été placée deux fois dans la même position.
+\end{itemize}
+
+La figure~\ref{fig:prob7} présente un exemple de partie.
 
 \begin{figure}
     \caption{\label{fig:prob7}Un exemple de partie avec (a) la disposition du plateau en début de partie, (b) les différents types de pièces et (c) une disposition en fin de partie}
@@ -65,7 +170,70 @@ se situe.
 \end{enumerate}
 \end{figure}
 
+\subsection{Encodage d'une solution}
+Une solution à une partie est une chaîne de caractères encodant la suite de mouvements à
+effectuer où chaque mouvement peut être encodé par plusieurs caractères selon la correspondance 
+présentée dans la figure~\ref{fig:moves}.
 \begin{figure}
-    \caption{\label{fig:partie}Succession de mouvements aboutissant à un verrouillage}
-    \input{dessins/exemple_lock.tex}
+    \caption{\label{fig:moves}Correspondance entre les mouvements et les caractères}
+    \centering
+\begin{tabular}{r|l}
+    mouvement & caractères \\
+    \hline
+    $\sW$ & {\tt p'!.03} \\
+    $\sE$ & {\tt bcefy2} \\
+    $\sSW$ & {\tt aghij4} \\
+    $\sSE$ & {\tt lmno 5} \\
+    $\sCW$ & {\tt dqrvz1} \\
+    $\sCCW$ & {\tt kstuwx}
+\end{tabular}
+\end{figure}
+
+\subsection{Phrases spéciales}
+Dans la mesure où il est possible d'utiliser plusieurs caractères pour encoder un mouvement,
+une même solution peut s'exprimer d'un grand nombre de manières, certaines d'entre elles faisant
+apparaître des mots compréhensibles.
+
+Une part importante du score final pour une partie est déterminé par la fréquence d'apparition 
+de phrases spéciales décrites à la figure~\ref{fig:power}.
+
+On peut remarquer que certaines de ces phrases sont longues et nécessitent beaucoup de cases
+libres pour être jouées sans coups invalides. Lorsqu'une pièce a certaines symétries de rotation 
+vis-à-vis de son pivot, elles peuvent être toujours invalides. Par exemple pour une pièce triviale
+réduite à une seule case contenant son pivot aucune des phrases contenant des rotations n'est 
+valide.
+
+Lors des trois jours du concours les phrases spéciales étaient cachées, pour les obtenir il 
+fallait résoudre des devinettes apparaissant au fil du déroulement. Notre équipe a découvert 15 
+des 18 phrases spéciales\footnote{Dont 5 dans la dernière heure grâce à des échanges avec 
+d'autres équipes\dots}.
+
+\begin{figure}
+    \caption{\label{fig:power}Les différentes phrases spéciales et leurs mouvements associés}
+    \centering
+    \small
+
+    \begin{description}
+        \item[{\tt in his house at r'lyeh dead cthulhu waits dreaming.}]
+            $\sSW\sSE\sSE\sSW\sSW\sCCW\sSE\sSW\sSE\sCCW\sCCW\sE\sSE\sSW\sCCW\sSE$ \\ $\sCW\sW\sSE\sE\sE\sSW\sSE\sCW\sE\sSW\sCW\sSE\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sCCW\sSW\sSW\sCCW\sCCW\sSE\sCW\sCW\sE\sSW\sSE\sSW\sSE\sSW\sW$
+    \item[{\tt ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn.}] 
+            $\sW\sSW\sW\sSE\sSW\sSE\sCCW\sSW\sSE\sSE\sSW\sSE\sCCW\sW\sSE\sSW\sE$ \\ $\sSW\sSE\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sCW\sW\sSE\sE\sE\sSW\sSE\sCCW\sSW\sSW\sSW\sW\sSE\sSW\sSW\sSE\sSE\sE\sSW\sCCW\sSW\sSW\sSE\sW$
+
+    \item[{\tt case nightmare green}] $\sE\sSW\sCCW\sE\sSE\sSE\sSW\sSW\sSW\sCCW\sSE\sSW\sCW\sE\sSE\sSW\sCW\sE\sE\sSE$
+    \item[{\tt cthulhu fhtagn!}] $\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sE\sSW\sCCW\sSW\sSW\sSE\sW$
+    \item[{\tt john bigboote}] $\sSW\sSE\sSW\sSE\sSE\sE\sSW\sSW\sE\sSE\sSE\sCCW\sE$ 
+    \item[{\tt vigintillion}] $\sCW\sSW\sSW\sSW\sSE\sCCW\sSW\sSE\sSE\sSW\sSE\sSE$ 
+    \item[{\tt necronomicon}] $\sSE\sE\sE\sCW\sSE\sSE\sSE\sSE\sSW\sE\sSE\sSE$
+    \item[{\tt the laundry}] $\sCCW\sSW\sE\sSE\sSE\sSW\sCCW\sSE\sCW\sCW\sE$
+    \item[{\tt yogsothoth}] $\sE\sSE\sSW\sCCW\sSE\sCCW\sSW\sSE\sCCW\sSW$
+    \item[{\tt blue hades}] $\sE\sSE\sCCW\sE\sSE\sSW\sSW\sCW\sE\sCCW$
+    \item[{\tt tsathoggua}] $\sCCW\sCCW\sSW\sCCW\sSW\sSE\sSW\sSW\sCCW\sSW$
+    \item[{\tt monkeyboy}] $\sSE\sSE\sSE\sCCW\sE\sE\sE\sSE\sE$
+    \item[{\tt planet 10}] $\sW\sSE\sSW\sSE\sE\sCCW\sSE\sCW\sW$
+    \item[{\tt yoyodyne}] $\sE\sSE\sE\sSE\sCW\sE\sSE\sE$
+    \item[{\tt ia! ia!}] $\sSW\sSW\sW\sSE\sSW\sSW\sW$
+    \item[{\tt yuggoth}] $\sE\sCCW\sSW\sSW\sSE\sCCW\sSW$
+    \item[{\tt r'lyeh}] $\sCW\sW\sSE\sE\sE\sSW$
+    \item[{\tt ei!}] $\sE\sSW\sW$
+\end{description}
 \end{figure}

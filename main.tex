@@ -2,6 +2,11 @@
  
 \usepackage{sty_files/BV}
 
+\newif\ifdessins
+\dessinstrue
+\newif\ifcouleur
+\couleurtrue
+
 \input{sty_files/misc.sty}    % Import macros diverses
 \input{sty_files/hexgrid.sty} % Import macros spécifiques grille hexagonale
 
@@ -21,8 +26,6 @@
   \renewcommand{\chaptermark}[1]{ \markboth{#1}{}}
     \uchyph=0
 
-\newif\ifdessins
-\dessinsfalse
 
 \begin{document}
 \chapter{Participation à l'ICFP 2015}
