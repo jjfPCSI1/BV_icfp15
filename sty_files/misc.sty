@@ -9,11 +9,19 @@
 \renewcommand{\thesubsubsection}{\roman{subsubsection}}
 \renewcommand\FrenchLabelItem{$\bullet$}
 
-%% Pour PythonTex
-% NB: avec l'option depythontex, le syntax_highlight ne marche pas...
-% en plus, depythontex ne semble pas fonctionner même avec le fichier le plus simple...
-\usepackage[makestderr]{pythontex} 
-%\usepackage[svgnames]{xcolor}  % -> mis dans BV.sty
+\makeatletter
+\ifpythontex
+	%% Pour PythonTex
+	% NB: avec l'option depythontex, le syntax_highlight ne marche pas...
+	% en plus, depythontex ne semble pas fonctionner même avec le fichier le plus simple...
+	\usepackage[makestderr]{pythontex} 
+	%\usepackage[svgnames]{xcolor}  % -> mis dans BV.sty
+	% Réglage du chemin d'import par défaut dans ce cas
+	\def\input@path{{pyverbatim/}}
+\else
+	\def\input@path{{verbatim/}}
+\fi
+\makeatother
 
 \newenvironment{code}[1][]{%
 \begin{mdframed}[linecolor=Green,innerrightmargin=30pt,innerleftmargin=30pt,

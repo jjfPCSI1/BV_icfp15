@@ -35,20 +35,7 @@ si le jeu de paramètres trouvés par l'algorithme est meilleur ou non que le
 jeu initial.
 
 \begin{code}
-\begin{pyverbatim}[][numbers=left]
-ANCETRE = [3,2,1,100,1,100]  # La pondération "naturelle" de base
-CANDIDATS = [ANCETRE]        # Les candidats "préqualifiés" 
-NOMBRE_DE_CANDIDATS= 12      # Pour une génération
-MAX_VAL = 10                 # Pour un paramètre
-NB_PARAMETRES = len(ANCETRE) # Le nombre de paramètres
-
-def cree_candidat():
-    """ Création d'un candidat aléatoire."""
-    return [random.randint(0,MAX_VAL) for j in range(NB_PARAMETRES)]
-        
-for i in range(NOMBRE_DE_CANDIDATS-len(CANDIDATS)):
-    CANDIDATS.append(cree_candidat())
-\end{pyverbatim}
+\input{creation.py}
 \end{code}
 
 \subsection{Organisation du tournoi}
@@ -84,22 +71,7 @@ Néanmoins, on introduit un brin d'aléatoire de deux manières différentes:
 \end{enumerate}
 
 \begin{code}
-\begin{pyverbatim}[][numbers=left]
-def reproduction(p1,r1,p2,r2):
-    """ Mélange des gènes pour p1 et p2. Renvoie un enfant. 
-    r1 et r2 sont les résultats respectivement pour p1 et p2. """
-    poids = r1/(r1+r2)
-    enfant = []
-    for i in range(NB_PARAMETRES):
-        # 9 fois sur 10, c'est le mixage normal
-        if random.randint(0,9) < 9: 
-            # On met un peu d'aléatoire dans le mélange
-            coeff = poids + (-1)**random.randint(0,1) * random.random()
-            enfant.append(int(coeff*p1[i] + (1-coeff)*p2[i]))
-        else: # Sinon, mutation aléatoire
-            enfant.append(random.randint(0,MAX_VAL))
-    return enfant
-\end{pyverbatim}
+\input{repro.py}
 \end{code}
 
 \subsection{Importance des mutations et du sang neuf}
