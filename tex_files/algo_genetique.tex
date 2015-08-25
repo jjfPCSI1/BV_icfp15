@@ -110,3 +110,13 @@ individus étant patiemment sélectionnés pour se développer lors des
 générations ultérieures.
 
 \subsection{Remarque concernant les calculs à faire}
+
+Bien entendu, comme il n'y a pas d'aléatoire dans le problème et que chaque 
+joueur joue absolument seul, il ne sert à rien de faire tourner à nouveau les 
+jeux de paramètres des parents dans le nouveau tournoi vu qu'ils donneront 
+exactement le même résultat qu'avant (ce ne serait pas le cas par exemple dans 
+un jeu où l'on affronte un autre joueur en combat singulier et que notre 
+stratégie peut être dépendante des mouvements de l'adversaire). C'est pourquoi 
+les résultats ont été stockés dans une base de données \texttt{sqlite3} et seuls 
+les calculs sur les candidats fils ainsi que les nouveaux candidats aléatoires 
+sont utilisés.
