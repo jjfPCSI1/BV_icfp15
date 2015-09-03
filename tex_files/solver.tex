@@ -1,9 +1,149 @@
 \section{Solution choisie}
-\subsection{Parcours en largeur pour découvrir les positions verrouillables}
-Pour placer une pièce, notre solution commence par énumérer les positions verrouillables dont 
-on sélectionnera la meilleure par une heuristique dans un second temps.
+\subsection{Système de coordonnées obliques et rotations}
+Il existe un système de coordonnées géométriques simple pour une grille
+hexagonale : \emph{le système de coordonnées obliques} qui est présenté 
+à la figure~\ref{fig:hexcoord2}.
 
-\subsection{Hachage des positions}
+Ce système correspond aux coordonnées dans la base
+$(\vec{u},\vec{v}) = \left((1,0), (\frac{1}{2},-\frac{\sqrt{3}}{2})\right)$ 
+de $\R^2$ pour des hexagones de diamètre 1.
+\iffalse
+comme on peut le constater avec de la géométrie élémentaire pour la seule
+coordonnée posant problème :
+\begin{center}
+\begin{tikzpicture}[scale=4, every node/.style={transform shape}]
+    \node[hexgrid]
+        (h00) at (0.4*1.75*0*0.5+0.4*0.45*0,0.4*-1.5*0*0.5) {};
+    \node[hexgrid]
+        (h01) at (0.4*1.75*0*0.5+0.4*0.43*1,0.4*-1.5*1*0.5) {};
+
+    \fill[black] (h00.center) circle (0.2pt);
+    \fill[black] (h01.center) circle (0.2pt);
+    \draw[-latex,thick] (h00.center) -- (h01.center);
+    \coordinate (s0) at ($(h00.center) + (0.5,0)$);
+    \coordinate (q1) at ($(h00.center) + (0,-0.2)$);
+    \coordinate (s1) at ($(h00.center) + (0.5,-0.2)$);
+    \coordinate (s2) at ($(h01.center) + (0.5-0.17,0)$);
+    \draw[dotted] (q1) -- (s1);
+    \draw[dotted] (h00.center) -- (s0);
+    \draw[dotted] (h01.center) -- (s2);
+    \draw[|<->|] (s0) -- node[scale=0.2,right] {$\frac{\sqrt{3}}{2}$} (s2);
+\end{tikzpicture}
+\end{center}
+\fi
+Pour passer du système originel vers celui-ci il suffit d'appliquer la 
+transformation
+\[
+(x,y) \xrightarrow{\text{vers oblique}} \left(x+\left\lfloor
+\frac{y}{2}\right\rfloor, y\right)
+\]
+et pour revenir dans le système originel il suffit de faire la réciproque
+dans la mesure où la seconde coordonnée est inchangée 
+\[
+(x,y) \xrightarrow{\text{vers originel}} \left(x-\left\lfloor
+\frac{y}{2}\right\rfloor, y\right)
+\]
+
+L'avantage de ce système est immédiat quand on considère l'impact des
+mouvements de descente sur les coordonnées comme présenté à la 
+figure~\ref{fig:mouvement_systeme}.
+
+Mais là où ce système est particulièrement intéressant c'est qu'il permet
+d'effectuer des rotations d'angle $\frac{k\pi}{3}$, $k \in \Z$, en utilisant
+uniquement des opérations arithmétiques entières~\footnote{On pourrait objecter
+que le passage d'un système de coordonnées à l'autre nécessite une division,
+mais comme il s'agit d'une division par deux, un simple décalage à droite 
+l'effectue, cette dernière opération étant encore plus élémentaire qu'une
+addition.}.
+
+Partant d'un point de coordonnées $(x,y)$ dans la base canonique de $\R^2$, on
+sait qu'en effectuant une rotation de centre l'origine et d'angle
+$\frac{-\pi}{3}$ on aboutit au point de coordonnées  $(x',y')$ où
+\[
+x' = \frac{x + \sqrt{3}y}{2} \quad y' = \frac{-\sqrt{3}x + y}{2}
+\]
+On considère maintenant le point de coordonnées obliques $(x_o,y_o)$
+qui a donc pour coordonnés dans $\R^2$ le couple 
+$(x_o+\frac{y_o}{2}, - \frac{\sqrt{3}}{2} y_o)$. Après rotation, on 
+obtient le couple 
+\[
+\left(\frac{x_o + \frac{y_o}{2} - \sqrt{3}\frac{\sqrt{3}}{2}y_o}{2},
+ \frac{-\sqrt{3}x_o - \frac{\sqrt{3}y_o}{2} - \frac{\sqrt{3}}{2} y_o}{2}\right)
+ = \left(\frac{x_o}{2} - \frac{y_o}{2}, \frac{-\sqrt{3}}{2}(x_o + y_o) \right)
+ = -y_o \vec{u} + (x_o+y_o)\vec{v}
+\]
+Pour effectuer un mouvement de rotation horaire dans le système oblique on 
+obtient ainsi la transformation élémentaire :
+\[
+    (x,y) \xrightarrow{\sCW} (-y,x+y)
+\]
+et en procédant de même on obtient 
+\[
+    (x,y) \xrightarrow{\sCCW} (x+y,-x)
+\]
+Notons qu'il est possible d'en déduire une formule de rotation dans le système
+originel, ce qui donne pour la rotation horaire :
+\begin{multline*}
+    (x,y) \xrightarrow{\text{vers oblique}}
+        \left( x + \left\lfloor \frac{y}{2} \right\rfloor, y \right)
+    \xrightarrow{\sCW} 
+        \left( -y,  x + \left\lfloor \frac{y}{2} \right\rfloor + y \right) \\
+    \xrightarrow{\text{vers originel}}
+    \left( -y +  
+    \left\lfloor\frac{x + \left\lfloor \frac{y}{2} \right\rfloor + y}{2}\right\rfloor
+    ,  x + \left\lfloor \frac{y}{2} \right\rfloor + y \right)
+\end{multline*}
+
+\begin{figure}
+    \caption{\label{fig:hexcoord2}Système de coordonnées obliquess}
+\ifdessins
+\centering
+\begin{tikzpicture}[scale=2, every node/.style={transform shape}]
+    \hexgridoblique{4}{4}
+    \foreach \x in {0,...,4} {
+    \foreach \y in {0,...,4} {
+        \node at (h\x;\y.center) {\tiny \x,\y};
+    }
+    }
+\end{tikzpicture}
+\fi
+\end{figure}
+
+\begin{figure}
+    \caption{\label{fig:mouvement_systeme}Effet d'un mouvement sur les
+    coordonnées $(x,y)$ selon le système de coordonnées}
+    \centering
+\begin{tabular}{c||c|c}
+    Mouvement & Coordonnées problème & Coordonnées obliques \\
+    \hline
+    \hline
+    $\sW$ & $(x-1,y)$ & $(x-1,y)$ \\
+    \hline
+    $\sE$ & $(x+1,y)$ & $(x+1,y)$ \\
+    \hline
+    $\sSW$ & $\begin{cases} (x-1,y+1) & \text{ si } y \text{ pair} \\ (x,y+1) &
+        \text{ sinon} \end{cases}$ & $(x-1,y+1)$ \\
+    \hline
+    $\sSE$ & $\begin{cases} (x,y+1) & \text{ si } y \text{ pair} \\ (x+1,y+1) &
+        \text{ sinon} \end{cases}$ & $(x,y+1)$
+\end{tabular}
+\end{figure}
+
+On peut alors choisir d'utiliser ces coordonnées uniquement pour calculer les
+positions après transformation ou les utiliser partout en ne revenant aux
+coordonnées initiales que pour accéder au plateau. Lors du concours nous avons
+fait le premier choix car le code avec déjà été écrit sans les rotations qui
+sont arrivées trop tard pour partir sur le bon système de coordonnées.
+
+Notons un autre avantage du système de coordonnées obliques : la translation
+est géométrique, donc un simple ajout aux coordonnées.
+Cela donne la possibilité d'identifier une pièce à la position de son pivot et 
+de sa rotation  tout en pouvant calculer très simplement la position de ses cellules.
+En effet, on peut calculer toutes les rotations d'une pièce au départ
+puis se contenter de translater les cellules.
+
+\subsection{Identification unique des positions}
+\label{par:id_unique}
 Afin de pouvoir assurer qu'aucune répétition de position a lieu il ne suffit pas de prendre 
 en compte des couples $(M,r)$ où $M$ est la position du pivot et $r$ la rotation effectués sur la 
 pièce.
@@ -23,6 +163,7 @@ Comme $R(p) \sim \Z/6\Z$ on a quatre cas pour $G_r(p)$ qui sont illustrés dans l
 
 \begin{figure}
     \caption{\label{fig:cassym}Les quatre cas pour le groupe $G_r(p)$}
+    \centering
     \input{dessins/cassym.tex}
 \end{figure}
 
@@ -48,3 +189,101 @@ qui est bien entendu plus couteux mais plus sûr lorsque l'on dispose de peu de t
 Pour maintenir la valeur de $k$ à jour lors des mouvements, il suffit de remarquer qu'une rotation 
 revient à ajouter $\overline{\pm 1}$ dans $G_r(p)$.
 
+\subsection{Parcours en largeur pour découvrir les positions verrouillables}
+Pour placer une pièce, notre solution commence par énumérer les positions
+verrouillables.
+
+Pour cela, on part de la pièce en position initiale puis on effectue tous les
+mouvements possibles pour découvrir de nouvelles positions qu'on maintient dans
+une file. Ensuite on procède de même en enlevant un élément dans la file tant
+qu'elle est non vide.
+
+Pour ne pas visiter plusieurs fois une même position on maintient un tableau de
+booléen indexé par l'identifiant unique vu en~\ref{par:id_unique}.
+
+Quand à partir d'une position il n'est pas possible d'effectuer tous les
+mouvements, alors il existe un mouvement permettant de verrouiller la pièce.
+On peut alors ajouter cette position aux positions verrouillables.
+
+Cela nous donne le pseudo-code suivant :
+\begin{code}
+\begin{verbatim}
+verouillables = []
+visitées = crée tableau de taille W x H x 6 initialisé à faux
+à_visiter = file vide
+
+ajoute position_initiale à à_visiter
+
+Tant que à_visiter est non vide:
+    position = enleve à à_visiter
+
+    Si visitées[position]:
+        passer à la suite
+
+    visitées[position] = vrai
+
+    mouvements_qui_verouillent  = []
+
+    Pour chaque mouvement:
+        nouvelle_position = effectue mouvement depuis position
+        Si nouvelle_position est valide:
+            ajoute nouvelle_position à à_visiter
+        Sinon:
+            ajoute mouvement à mouvements_qui_verrouillent
+
+    Si mouvements_qui_verouillent est non vide:
+        mouvement = mouvements_qui_verouillent[0]
+        ajoute (position, mouvement) à verouillables
+\end{verbatim}
+\end{code}
+
+En faisant ainsi on obtient en fin d'algorithme la liste des positions
+verrouillables et il n'est pas compliqué de maintenir la suite de mouvements qui
+nous a permis d'atteindre cette position depuis la position initiale.
+
+Pour ne pas garder des positions verrouillables inintéressantes notre
+algorithme ne gardait pas les positions au dessus de la dernière cellule
+occupée sur le plateau.
+
+On obtient alors le nouveau pseudo-code :
+\begin{code}
+\begin{verbatim}
+verouillables = []
+visitées = crée tableau de taille W x H x 6 initialisé à faux
+à_visiter = file vide
+
+ajoute (position_initiale,chemin_vide) à à_visiter
+
+Tant que à_visiter est non vide:
+    position, chemin = enleve à à_visiter
+
+    Si visitées[position]:
+        passer à la suite
+
+    visitées[position] = vrai
+
+    mouvements_qui_verouillent  = []
+
+    Pour chaque mouvement:
+        nouvelle_position = effectue mouvement depuis position
+        nouv_chemin = chemin prolongé de mouvement
+        Si nouvelle_position est valide:
+            ajoute (nouvelle_position, nouv_chemin) à à_visiter
+        Sinon:
+            ajoute mouvement à mouvements_qui_verrouillent
+
+    Si mouvements_qui_verouillent est non vide:
+        mouvement = mouvements_qui_verouillent[0]
+        Si position suffissament basse:
+            ajoute (position, chemin, mouvement) à verouillables
+\end{verbatim}
+\end{code}
+
+En utilisant une file plutôt qu'une pile on obtient un parcours en largeur et
+on a donc la garantie que les chemins obtenus soient de longueur minimale.
+Cela n'a pour le moment pas d'importance mais il nous a semblé plus naturel de
+procéder ainsi au début du concours car les pièces mettait beaucoup de
+mouvements à venir en position car elle zigzaguaient de gauche à droite.
+
+Plus tard, nous nous sommes servi de la propriété du parcours en largeur pour
+intégrer les phrases spéciales dans l'algorithme.

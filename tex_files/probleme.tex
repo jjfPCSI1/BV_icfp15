@@ -33,9 +33,9 @@ suivant présenté dans la figure~\ref{fig:hexcoord1}
 \ifdessins
 \centering
 \begin{tikzpicture}[scale=2, every node/.style={transform shape}]
-    \hexgrid{9}{9}
-    \foreach \x in {0,...,9} {
-    \foreach \y in {0,...,9} {
+    \hexgrid{4}{4}
+    \foreach \x in {0,...,4} {
+    \foreach \y in {0,...,4} {
         \node at (h\x;\y.center) {\tiny \x,\y};
     }
     }
@@ -95,9 +95,9 @@ Pour déplacer une pièce on dispose de six mouvements :
     \item[$\sE$] mouvement d'un cran à droite (Est)
     \item[$\sSW$] mouvement d'un cran à gauche et d'un cran en bas (Sud-Ouest)
     \item[$\sSE$] mouvement d'un cran à droite et d'un cran en bas (Sud-Est)
-    \item[$\sCCW$] rotation d'un angle $\frac{\pi}{6}$ autour du pivot 
+    \item[$\sCCW$] rotation d'un angle $\frac{\pi}{3}$ autour du pivot 
         (Rotation anti-horaire)
-    \item[$\sCW$] rotation d'un angle $-\frac{\pi}{6}$ autour du pivot 
+    \item[$\sCW$] rotation d'un angle $-\frac{\pi}{3}$ autour du pivot 
         (Rotation horaire)
 \end{description}
 
