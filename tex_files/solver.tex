@@ -23,7 +23,7 @@ coordonnée posant problème :
     \coordinate (s0) at ($(h00.center) + (0.5,0)$);
     \coordinate (q1) at ($(h00.center) + (0,-0.2)$);
     \coordinate (s1) at ($(h00.center) + (0.5,-0.2)$);
-    \coordinate (s2) at ($(h01.center) + (0.5-0.17,0)$);
+    \coordinate (s2) at ($(h01.center) + (0.5-0.16,0)$);
     \draw[dotted] (q1) -- (s1);
     \draw[dotted] (h00.center) -- (s0);
     \draw[dotted] (h01.center) -- (s2);
@@ -31,16 +31,16 @@ coordonnée posant problème :
 \end{tikzpicture}
 \end{center}
 \fi
-Pour passer du système originel vers celui-ci il suffit d'appliquer la 
+Pour passer du système du problème vers celui-ci il suffit d'appliquer la 
 transformation
 \[
 (x,y) \xrightarrow{\text{vers oblique}} \left(x+\left\lfloor
 \frac{y}{2}\right\rfloor, y\right)
 \]
-et pour revenir dans le système originel il suffit de faire la réciproque
+et pour revenir dans le système du problème il suffit de faire la réciproque
 dans la mesure où la seconde coordonnée est inchangée 
 \[
-(x,y) \xrightarrow{\text{vers originel}} \left(x-\left\lfloor
+(x,y) \xrightarrow{\text{vers problème}} \left(x-\left\lfloor
 \frac{y}{2}\right\rfloor, y\right)
 \]
 
@@ -82,13 +82,13 @@ et en procédant de même on obtient
     (x,y) \xrightarrow{\sCCW} (x+y,-x)
 \]
 Notons qu'il est possible d'en déduire une formule de rotation dans le système
-originel, ce qui donne pour la rotation horaire :
+du problème, ce qui donne pour la rotation horaire :
 \begin{multline*}
     (x,y) \xrightarrow{\text{vers oblique}}
         \left( x + \left\lfloor \frac{y}{2} \right\rfloor, y \right)
     \xrightarrow{\sCW} 
         \left( -y,  x + \left\lfloor \frac{y}{2} \right\rfloor + y \right) \\
-    \xrightarrow{\text{vers originel}}
+    \xrightarrow{\text{vers problème}}
     \left( -y +  
     \left\lfloor\frac{x + \left\lfloor \frac{y}{2} \right\rfloor + y}{2}\right\rfloor
     ,  x + \left\lfloor \frac{y}{2} \right\rfloor + y \right)
@@ -159,7 +159,10 @@ le sous-groupe de $R(p)$ constitué des éléments laissant $p$ invariante.
 Pour une position donnée du pivot, on a donc autant de possibilités pour la pièce que
 d'éléments dans $G_r(p) = R(p) / I(p)$ (tous ces groupes sont abéliens). 
 
-Comme $R(p) \sim \Z/6\Z$ on a quatre cas pour $G_r(p)$ qui sont illustrés dans la figure~\ref{fig:cassym}.
+On a $R(p) \sim \Z/6\Z$ et on peut fixer un isomorphisme $f : \Z/6\Z
+\rightarrow R(p)$ en posant $f(\overline{1}) = r_p$.
+
+On a quatre cas pour $G_r(p)$ qui sont illustrés dans la figure~\ref{fig:cassym}.
 
 \begin{figure}
     \caption{\label{fig:cassym}Les quatre cas pour le groupe $G_r(p)$}
@@ -167,13 +170,28 @@ Comme $R(p) \sim \Z/6\Z$ on a quatre cas pour $G_r(p)$ qui sont illustrés dans l
     \input{dessins/cassym.tex}
 \end{figure}
 
-On peut alors représenter uniquement la position d'une pièce à symétrie près par un couple 
-$(M,r)$ où $M$ est la position du pivot et $r \in G_r(p)$.
+Notons $k(p)$ l'entier tel que $G_r(p) \sim\Z/ k(p) \Z$. Cet entier peut-être
+déterminer pièce par pièce au début de la résolution en testant la plus petite
+valeur non nulle pour laquelle $r_p^{k(p)}$ laisse invariante la pièce $p$.
 
-En pratique, on identifie $r$ à l'élément $k \in [|0;5|]$ tel que $r$ soit 
-associé à $\overline{k}$ par les isomorphismes ci-dessus.
+On peut alors représenter \emph{uniquement} la position d'une pièce à symétrie près
+par un triplet  $(x,y,r)$ où $(x,y)$ est la position du pivot et $r \in \{0,
+\cdots, k(p) \}$ représente la rotation $f(\overline{r})$ appliquée sur la
+pièce.
 
-On est donc ramené à un triplet d'entier par position. Comme le pivot peut sortir
+Pour maintenir la valeur de $r$ à jour lors des mouvements, il suffit de remarquer qu'une rotation 
+revient à ajouter $\overline{\pm 1}$ dans $G_r(p)$. Il suffit donc de remplacer
+$r$ par $(r \pm 1) \mod k(p)$.
+
+\subsection{Tableau de positions}
+\label{par:tab_pos}
+Comme dans la plupart des parcours de graphe on va être amener à maintenir un
+booléen par position pour savoir si cette position a déjà été visitée.
+
+On crée donc un tableau à trois dimensions proposant une case par triplet
+$(x,y,r)$ comme décrit au paragraphe précédent.
+
+Cependant, comme le pivot peut sortir
 de la zone de jeu, il faut border le tableau pour pouvoir tenir compte de ces positions du pivot.
 
 Un calcul rapide sur les pièces disponibles permet de déterminer une valeur $b$ telle que le pivot 
@@ -181,13 +199,11 @@ dans une zone de jeu de dimension $w \times h$ ait des coordonnées dans $[|-b;w+
 [|-b;h+b-1|]$. 
 
 Grâce à cet encodage on peut créer un tableau de booléens à trois dimensions $V$ tel que 
-$V_{x,y,k}$ indique si la position où le pivot est en $(x,y)$ et la rotation est celle associée 
+$V[x,y,k]$ indique si la position où le pivot est en $(x,y)$ et la rotation est celle associée 
 à $k$ est visitée.~\footnote{Durant le concours, en raison de la présence du bord $b$ à calculer 
 et des problèmes potentiels, nous avons uniquement utilisé une liste de positions visitées ce 
 qui est bien entendu plus couteux mais plus sûr lorsque l'on dispose de peu de temps.}
 
-Pour maintenir la valeur de $k$ à jour lors des mouvements, il suffit de remarquer qu'une rotation 
-revient à ajouter $\overline{\pm 1}$ dans $G_r(p)$.
 
 \subsection{Parcours en largeur pour découvrir les positions verrouillables}
 Pour placer une pièce, notre solution commence par énumérer les positions
@@ -196,10 +212,213 @@ verrouillables.
 Pour cela, on part de la pièce en position initiale puis on effectue tous les
 mouvements possibles pour découvrir de nouvelles positions qu'on maintient dans
 une file. Ensuite on procède de même en enlevant un élément dans la file tant
-qu'elle est non vide.
+qu'elle est non vide. La figure~\ref{fig:largeur} présente les mouvements ayant
+permis de découvrir des positions pour une pièce élémentaire composée d'une
+cellule. On constate que pour trouver des chemins il suffit de \emph{suivre les
+flèches}.
+
+\begin{figure}
+    \caption{\label{fig:largeur}Mouvements ayant découvert une position pour
+    une pièce constituée d'une cellule au sommet du plateau}
+    \centering
+    \ifdessins
+\begin{tikzpicture}[scale=1.5, every node/.style={transform shape}]
+\hexgrid{14}{14}
+\node at (h0;0.center) {\tiny $\sW$}; 
+\node at (h1;0.center) {\tiny $\sW$}; 
+\node at (h2;0.center) {\tiny $\sW$}; 
+\node at (h3;0.center) {\tiny $\sW$}; 
+\node at (h4;0.center) {\tiny $\sW$}; 
+\node at (h5;0.center) {\tiny $\sW$}; 
+\node at (h6;0.center) {\tiny $\sW$}; 
+\node at (h8;0.center) {\tiny $\sE$}; 
+\node at (h9;0.center) {\tiny $\sE$}; 
+\node at (h10;0.center) {\tiny $\sE$}; 
+\node at (h11;0.center) {\tiny $\sE$}; 
+\node at (h12;0.center) {\tiny $\sE$}; 
+\node at (h13;0.center) {\tiny $\sE$}; 
+\node at (h14;0.center) {\tiny $\sE$}; 
+\node at (h0;1.center) {\tiny $\sSW$}; 
+\node at (h1;1.center) {\tiny $\sSW$}; 
+\node at (h2;1.center) {\tiny $\sSW$}; 
+\node at (h3;1.center) {\tiny $\sSW$}; 
+\node at (h4;1.center) {\tiny $\sSW$}; 
+\node at (h5;1.center) {\tiny $\sSW$}; 
+\node at (h6;1.center) {\tiny $\sSW$}; 
+\node at (h7;1.center) {\tiny $\sSE$}; 
+\node at (h8;1.center) {\tiny $\sSE$}; 
+\node at (h9;1.center) {\tiny $\sSE$}; 
+\node at (h10;1.center) {\tiny $\sSE$}; 
+\node at (h11;1.center) {\tiny $\sSE$}; 
+\node at (h12;1.center) {\tiny $\sSE$}; 
+\node at (h13;1.center) {\tiny $\sSE$}; 
+\node at (h14;1.center) {\tiny $\sSE$}; 
+\node at (h0;2.center) {\tiny $\sSW$}; 
+\node at (h1;2.center) {\tiny $\sSW$}; 
+\node at (h2;2.center) {\tiny $\sSW$}; 
+\node at (h3;2.center) {\tiny $\sSW$}; 
+\node at (h4;2.center) {\tiny $\sSW$}; 
+\node at (h5;2.center) {\tiny $\sSW$}; 
+\node at (h6;2.center) {\tiny $\sSW$}; 
+\node at (h7;2.center) {\tiny $\sSW$}; 
+\node at (h8;2.center) {\tiny $\sSE$}; 
+\node at (h9;2.center) {\tiny $\sSE$}; 
+\node at (h10;2.center) {\tiny $\sSE$}; 
+\node at (h11;2.center) {\tiny $\sSE$}; 
+\node at (h12;2.center) {\tiny $\sSE$}; 
+\node at (h13;2.center) {\tiny $\sSE$}; 
+\node at (h14;2.center) {\tiny $\sSE$}; 
+\node at (h0;3.center) {\tiny $\sSW$}; 
+\node at (h1;3.center) {\tiny $\sSW$}; 
+\node at (h2;3.center) {\tiny $\sSW$}; 
+\node at (h3;3.center) {\tiny $\sSW$}; 
+\node at (h4;3.center) {\tiny $\sSW$}; 
+\node at (h5;3.center) {\tiny $\sSW$}; 
+\node at (h6;3.center) {\tiny $\sSW$}; 
+\node at (h7;3.center) {\tiny $\sSW$}; 
+\node at (h8;3.center) {\tiny $\sSE$}; 
+\node at (h9;3.center) {\tiny $\sSE$}; 
+\node at (h10;3.center) {\tiny $\sSE$}; 
+\node at (h11;3.center) {\tiny $\sSE$}; 
+\node at (h12;3.center) {\tiny $\sSE$}; 
+\node at (h13;3.center) {\tiny $\sSE$}; 
+\node at (h14;3.center) {\tiny $\sSE$}; 
+\node at (h0;4.center) {\tiny $\sSW$}; 
+\node at (h1;4.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;4.south) {};\node[hexcell,filled] at (h3;4.south) {};\node[hexcell,filled] at (h4;4.south) {};\node[hexcell,filled] at (h5;4.south) {};\node[hexcell,filled] at (h6;4.south) {};
+\node at (h7;4.center) {\tiny $\sSW$}; 
+\node at (h8;4.center) {\tiny $\sSW$}; 
+\node at (h9;4.center) {\tiny $\sSE$}; 
+\node at (h10;4.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;4.south) {};
+\node at (h12;4.center) {\tiny $\sSE$}; 
+\node at (h13;4.center) {\tiny $\sSE$}; 
+\node at (h14;4.center) {\tiny $\sSE$}; 
+\node at (h0;5.center) {\tiny $\sSW$}; 
+\node at (h1;5.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h2;5.south) {};
+\node at (h3;5.center) {\tiny $\sW$}; 
+\node at (h4;5.center) {\tiny $\sW$}; 
+\node at (h5;5.center) {\tiny $\sW$}; 
+\node at (h6;5.center) {\tiny $\sSW$}; 
+\node at (h7;5.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h8;5.south) {};
+\node at (h9;5.center) {\tiny $\sSE$}; 
+\node at (h10;5.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;5.south) {};
+\node at (h12;5.center) {\tiny $\sSE$}; 
+\node at (h13;5.center) {\tiny $\sSE$}; 
+\node at (h14;5.center) {\tiny $\sSE$}; 
+\node at (h0;6.center) {\tiny $\sSW$}; 
+\node at (h1;6.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;6.south) {};
+\node at (h3;6.center) {\tiny $\sSW$}; 
+\node at (h4;6.center) {\tiny $\sSW$}; 
+\node at (h5;6.center) {\tiny $\sSW$}; 
+\node at (h6;6.center) {\tiny $\sSW$}; 
+\node at (h7;6.center) {\tiny $\sSW$}; 
+\node at (h8;6.center) {\tiny $\sSE$}; 
+\node at (h9;6.center) {\tiny $\sSW$}; 
+\node at (h10;6.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;6.south) {};
+\node at (h12;6.center) {\tiny $\sSW$}; 
+\node at (h13;6.center) {\tiny $\sSE$}; 
+\node at (h14;6.center) {\tiny $\sSE$}; 
+\node at (h0;7.center) {\tiny $\sSW$}; 
+\node at (h1;7.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h2;7.south) {};\node[hexcell,filled] at (h3;7.south) {};\node[hexcell,filled] at (h4;7.south) {};
+\node at (h5;7.center) {\tiny $\sSW$}; 
+\node at (h6;7.center) {\tiny $\sSW$}; 
+\node at (h7;7.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h8;7.south) {};
+\node at (h9;7.center) {\tiny $\sSW$}; 
+\node at (h10;7.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;7.south) {};
+\node at (h12;7.center) {\tiny $\sSW$}; 
+\node at (h13;7.center) {\tiny $\sSE$}; 
+\node at (h14;7.center) {\tiny $\sSE$}; 
+\node at (h0;8.center) {\tiny $\sSW$}; 
+\node at (h1;8.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;8.south) {};
+\node at (h3;8.center) {\tiny $\sW$}; 
+\node at (h4;8.center) {\tiny $\sW$}; 
+\node at (h5;8.center) {\tiny $\sSW$}; 
+\node at (h6;8.center) {\tiny $\sSW$}; 
+\node at (h7;8.center) {\tiny $\sSW$}; 
+\node at (h8;8.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h9;8.south) {};
+\node at (h10;8.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h11;8.south) {};
+\node at (h12;8.center) {\tiny $\sSW$}; 
+\node at (h13;8.center) {\tiny $\sSW$}; 
+\node at (h14;8.center) {\tiny $\sSE$}; 
+\node at (h0;9.center) {\tiny $\sSW$}; 
+\node at (h1;9.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h2;9.south) {};
+\node at (h3;9.center) {\tiny $\sSW$}; 
+\node at (h4;9.center) {\tiny $\sSW$}; 
+\node at (h5;9.center) {\tiny $\sSW$}; 
+\node at (h6;9.center) {\tiny $\sSW$}; 
+\node at (h7;9.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h8;9.south) {};
+\node at (h9;9.center) {\tiny $\sSW$}; 
+\node at (h10;9.center) {\tiny $\sSE$}; 
+\node at (h11;9.center) {\tiny $\sE$}; 
+\node at (h12;9.center) {\tiny $\sE$}; 
+\node at (h13;9.center) {\tiny $\sSW$}; 
+\node at (h14;9.center) {\tiny $\sSE$}; 
+\node at (h0;10.center) {\tiny $\sSW$}; 
+\node at (h1;10.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;10.south) {};\node[hexcell,filled] at (h3;10.south) {};\node[hexcell,filled] at (h4;10.south) {};\node[hexcell,filled] at (h5;10.south) {};\node[hexcell,filled] at (h6;10.south) {};
+\node at (h7;10.center) {\tiny $\sSW$}; 
+\node at (h8;10.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h9;10.south) {};
+\node at (h10;10.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h11;10.south) {};
+\node at (h12;10.center) {\tiny $\sSE$}; 
+\node at (h13;10.center) {\tiny $\sSE$}; 
+\node at (h14;10.center) {\tiny $\sSW$}; 
+\node at (h0;11.center) {\tiny $\sSW$}; 
+\node at (h1;11.center) {\tiny $\sSE$}; 
+\node at (h2;11.center) {\tiny $\sW$}; 
+\node at (h3;11.center) {\tiny $\sW$}; 
+\node at (h4;11.center) {\tiny $\sW$}; 
+\node at (h5;11.center) {\tiny $\sW$}; 
+\node at (h6;11.center) {\tiny $\sSW$}; 
+\node at (h7;11.center) {\tiny $\sSW$}; 
+\node at (h8;11.center) {\tiny $\sSE$}; 
+\node at (h9;11.center) {\tiny $\sSW$}; 
+\node at (h10;11.center) {\tiny $\sSE$}; 
+\node at (h11;11.center) {\tiny $\sSW$}; 
+\node at (h12;11.center) {\tiny $\sSE$}; 
+\node at (h13;11.center) {\tiny $\sSE$}; 
+\node at (h14;11.center) {\tiny $\sSE$}; 
+\node at (h0;12.center) {\tiny $\sSW$}; 
+\node at (h1;12.center) {\tiny $\sSW$}; 
+\node at (h2;12.center) {\tiny $\sSE$}; 
+\node at (h3;12.center) {\tiny $\sSW$}; 
+\node at (h4;12.center) {\tiny $\sSW$}; 
+\node at (h5;12.center) {\tiny $\sSW$}; 
+\node at (h6;12.center) {\tiny $\sSW$}; 
+\node at (h7;12.center) {\tiny $\sSW$}; 
+\node at (h8;12.center) {\tiny $\sSW$}; 
+\node at (h9;12.center) {\tiny $\sSW$}; 
+\node at (h10;12.center) {\tiny $\sSW$}; 
+\node at (h11;12.center) {\tiny $\sSE$}; 
+\node at (h12;12.center) {\tiny $\sSW$}; 
+\node at (h13;12.center) {\tiny $\sSE$}; 
+\node at (h14;12.center) {\tiny $\sSE$}; 
+\node at (h0;13.center) {\tiny $\sSW$}; 
+\node at (h1;13.center) {\tiny $\sSW$}; 
+\node at (h2;13.center) {\tiny $\sSW$}; 
+\node at (h3;13.center) {\tiny $\sSW$}; 
+\node at (h4;13.center) {\tiny $\sSW$}; 
+\node at (h5;13.center) {\tiny $\sSW$}; 
+\node at (h6;13.center) {\tiny $\sSW$}; 
+\node at (h7;13.center) {\tiny $\sSW$}; 
+\node at (h8;13.center) {\tiny $\sSW$}; 
+\node at (h9;13.center) {\tiny $\sSW$}; 
+\node at (h10;13.center) {\tiny $\sSW$}; 
+\node at (h11;13.center) {\tiny $\sSE$}; 
+\node at (h12;13.center) {\tiny $\sSW$}; 
+\node at (h13;13.center) {\tiny $\sSE$}; 
+\node at (h14;13.center) {\tiny $\sSE$}; \node[hexcell,piecea] at (h0;14.south) {};\node[hexcell,piecea] at (h1;14.south) {};\node[hexcell,piecea] at (h2;14.south) {};\node[hexcell,piecea] at (h3;14.south) {};\node[hexcell,piecea] at (h4;14.south) {};
+\node at (h5;14.center) {\tiny $\sSW$}; 
+\node at (h6;14.center) {\tiny $\sSW$}; 
+\node at (h7;14.center) {\tiny $\sSW$}; 
+\node at (h8;14.center) {\tiny $\sSW$}; 
+\node at (h9;14.center) {\tiny $\sSW$}; 
+\node at (h10;14.center) {\tiny $\sSW$}; 
+\node at (h11;14.center) {\tiny $\sSW$}; 
+\node at (h12;14.center) {\tiny $\sSE$}; 
+\node at (h13;14.center) {\tiny $\sSW$}; \node[hexcell,piecea] at (h14;14.south) {};\end{tikzpicture}
+\fi
+\end{figure}
 
 Pour ne pas visiter plusieurs fois une même position on maintient un tableau de
-booléen indexé par l'identifiant unique vu en~\ref{par:id_unique}.
+booléen indexé par l'identifiant unique vu en~\ref{par:tab_pos}.
 
 Quand à partir d'une position il n'est pas possible d'effectuer tous les
 mouvements, alors il existe un mouvement permettant de verrouiller la pièce.
@@ -287,3 +506,285 @@ mouvements à venir en position car elle zigzaguaient de gauche à droite.
 
 Plus tard, nous nous sommes servi de la propriété du parcours en largeur pour
 intégrer les phrases spéciales dans l'algorithme.
+
+
+\subsection{Sélection de la meilleure position verrouillable}
+A l'issue du parcours précédent on obtient une liste de positions verrouillable
+avec le chemin permettant d'y accéder depuis la position initiale de la pièce.
+
+Afin de choisir la position verrouillable que l'on va jouer, on effectue un
+classement de ces positions en fonction d'un score qui est une somme pondérée
+de différents indicateurs numériques. Le choix des coefficients pour la
+pondération fait l'objet d'une optimisation par algorithme génétique présentée
+dans la section~\ref{sec:gen}.
+
+Voici différents indicateurs que nous avons utilisé, à chaque fois en partant
+du plateau avec la pièce verrouillée :
+\begin{itemize}
+    \item\textbf{la hauteur du plateau} -- \emph{à minimiser}  -- une
+        augmentation de la hauteur est presque toujours mauvais signe ;
+    \item\textbf{la différence entre la hauteur du plateau et la position de la plus haute 
+        cellule de la pièce verrouillée} -- \emph{à minimiser} -- on favorise
+        la compactification du plateau en donnant un bonus aux verrouillage
+        proches du bas du plateau ;
+    \item\textbf{le nombre de lignes complètement remplies} -- \emph{à
+        maximiser} -- ici ce n'est pas aussi simple qu'on pourrait le croire
+        car il y a un bénéfice à attendre avant de compléter des lignes, afin
+        d'enchaîner plusieurs suppressions ce qui apporte des points bonus ;
+    \item\textbf{le nombre de cellules libres piégées autour de la pièce
+        verrouillée} -- \emph{à minimiser} -- le but est ici clair, ne pas
+        avoir des cellules \emph{mortes} qui empêcheront la complétion d'une
+        ligne.
+    \item\textbf{le nombre de cellules libres autour de la pièce sur la ligne 
+        la plus basse qu'elle occupe} -- \emph{à minimiser} -- on a pu remarquer
+        que sans cet indicateur les pièces se disposaient aléatoirement le long
+        de la ligne la plus basse, ce qui pouvait faire apparaitre des cellules
+        libres un peu partout. Avec cet indicateur, les pièces s'attirent car
+        en se collant les unes aux autres elle diminuent le nombre de ces
+        cellules libres.
+\end{itemize}
+
+\subsection{Inclusion des phrases spéciales}
+L'algorithme précédemment décrit était celui que nous avions à l'issue du
+premier jour du concours. Très vite, dans le tableau interactif des scores,
+nous avons pu observer que les équipes utilisant les phrases spéciales
+prenaient l'avantage.
+
+Initialement, nous pensions insérer ces phrases spéciales en transformant le
+chemin obtenu dans notre algorithme. Or, cela semblait finalement assez coûteux
+en temps et nous avons plutôt essayé de transformer l'algorithme pour y insérer
+l'usage des phrases spéciales~\footnote{Notons que la seconde soumission de
+notre équipe, programmée par Loic Pottier, a fait l'autre choix et cela a
+confirmé le caractère coûteux du procédé bien que cela produisait des
+bons scores.}.
+
+L'idée principale a été de considérer les phrases spéciales comme des mouvements
+atomiques. Dans un parcours en largeur le premier mouvement ayant découvert une
+position fera toujours parti du chemin passant par cette position. Ainsi, si on
+commence en visitant une cellule par découvrir toutes les cellules qu'on peut
+atteindre avec une phrase spéciale, sous réserve que son exécution soit valide,
+on est assuré de voir apparaitre la phrase spéciale dans le chemin final.
+
+Ce fonctionnement est illustré à la figure~\ref{fig:largeur_pw} où une
+utilisation d'une phrase spéciale est indiquée par son numéro attribué à la
+figure~\ref{fig:power}.
+
+Les limites de cet algorithme sont évidentes : beaucoup de cellules pourraient
+être découvertes par une phrase spéciale alors qu'elles ne le sont que par des
+mouvements élémentaires.
+
+Cependant, lors du concours, cela semblait suffisant pour marquer des points.
+
+Une amélioration rapide de l'algorithme consisterait dans un second temps à
+regarder pour chaque cellule si on peut l'atteindre par une phrase spéciale à
+partir d'une position découverte. Ce genre d'optimisation peut paraitre
+évidente à la lecture de cet article, d'autant en constatant sur la
+figure~\ref{fig:largeur_pw} le faible emploi des phrases spéciales. Cependant,
+pendant le concours, nous n'y avons pas pensé et cela nous a surement fait
+perdre une dizaine de places.
+
+Afin d'augmenter artificiellement le nombre de phrases spéciales utilisées, un
+nouvel indicateur numérique à été ajouté à la fonction d'évaluation des
+positions verrouillables : \textbf{le nombre de phrases spéciales utilisées} avec un
+bonus si une phrase n'avait pas encore était utilisée dans les coups
+précédents.
+
+\begin{figure}
+    \caption{\label{fig:largeur_pw}Mouvements ayant découvert une position pour
+    une pièce constituée d'une cellule au sommet du plateau}
+    \centering
+    \ifdessins
+\begin{tikzpicture}[scale=1.5, every node/.style={transform shape}]
+\hexgrid{14}{14}
+\node at (h0;0.center) {\tiny $\sW$}; 
+\node at (h1;0.center) {\tiny $\sW$}; 
+\node at (h2;0.center) {\tiny $\sW$}; 
+\node at (h3;0.center) {\tiny $\sW$}; 
+\node at (h4;0.center) {\tiny $\sW$}; 
+\node at (h5;0.center) {\tiny $\sW$}; 
+\node at (h6;0.center) {\tiny $\sW$}; 
+\node at (h8;0.center) {\tiny $\sE$}; 
+\node at (h9;0.center) {\tiny $\sE$}; 
+\node at (h10;0.center) {\tiny $\sE$}; 
+\node at (h11;0.center) {\tiny $\sE$}; 
+\node at (h12;0.center) {\tiny $\sE$}; 
+\node at (h13;0.center) {\tiny $\sE$}; 
+\node at (h14;0.center) {\tiny $\sE$}; 
+\node at (h0;1.center) {\tiny $\sW$}; 
+\node at (h1;1.center) {\tiny $\sW$}; 
+\node at (h2;1.center) {\tiny $\sW$}; 
+\node at (h3;1.center) {\tiny $\sW$}; 
+\node at (h4;1.center) {\tiny $\sW$}; 
+\node at (h5;1.center) {\tiny $\sW$}; 
+\node at (h6;1.center) {\tiny 18}; 
+\node at (h7;1.center) {\tiny $\sSE$}; 
+\node at (h8;1.center) {\tiny $\sSE$}; 
+\node at (h9;1.center) {\tiny $\sSE$}; 
+\node at (h10;1.center) {\tiny $\sSE$}; 
+\node at (h11;1.center) {\tiny $\sSE$}; 
+\node at (h12;1.center) {\tiny $\sSE$}; 
+\node at (h13;1.center) {\tiny $\sSE$}; 
+\node at (h14;1.center) {\tiny $\sSE$}; 
+\node at (h0;2.center) {\tiny $\sSW$}; 
+\node at (h1;2.center) {\tiny $\sSW$}; 
+\node at (h2;2.center) {\tiny $\sSW$}; 
+\node at (h3;2.center) {\tiny $\sSW$}; 
+\node at (h4;2.center) {\tiny $\sSW$}; 
+\node at (h5;2.center) {\tiny $\sSW$}; 
+\node at (h6;2.center) {\tiny $\sSW$}; 
+\node at (h7;2.center) {\tiny $\sSE$}; 
+\node at (h8;2.center) {\tiny $\sSE$}; 
+\node at (h9;2.center) {\tiny $\sSE$}; 
+\node at (h10;2.center) {\tiny $\sSE$}; 
+\node at (h11;2.center) {\tiny $\sSE$}; 
+\node at (h12;2.center) {\tiny $\sSE$}; 
+\node at (h13;2.center) {\tiny $\sSE$}; 
+\node at (h14;2.center) {\tiny $\sSE$}; 
+\node at (h0;3.center) {\tiny 18}; 
+\node at (h1;3.center) {\tiny 18}; 
+\node at (h2;3.center) {\tiny 18}; 
+\node at (h3;3.center) {\tiny 18}; 
+\node at (h4;3.center) {\tiny 18}; 
+\node at (h5;3.center) {\tiny 18}; 
+\node at (h6;3.center) {\tiny 18}; 
+\node at (h7;3.center) {\tiny $\sSE$}; 
+\node at (h8;3.center) {\tiny $\sSE$}; 
+\node at (h9;3.center) {\tiny $\sSE$}; 
+\node at (h10;3.center) {\tiny $\sSE$}; 
+\node at (h11;3.center) {\tiny $\sSE$}; 
+\node at (h12;3.center) {\tiny $\sSE$}; 
+\node at (h13;3.center) {\tiny $\sSE$}; 
+\node at (h14;3.center) {\tiny $\sSE$}; 
+\node at (h0;4.center) {\tiny $\sSW$}; 
+\node at (h1;4.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;4.south) {};\node[hexcell,filled] at (h3;4.south) {};\node[hexcell,filled] at (h4;4.south) {};\node[hexcell,filled] at (h5;4.south) {};\node[hexcell,filled] at (h6;4.south) {};
+\node at (h7;4.center) {\tiny $\sSE$}; 
+\node at (h8;4.center) {\tiny $\sSE$}; 
+\node at (h9;4.center) {\tiny $\sSE$}; 
+\node at (h10;4.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;4.south) {};
+\node at (h12;4.center) {\tiny $\sSE$}; 
+\node at (h13;4.center) {\tiny $\sSE$}; 
+\node at (h14;4.center) {\tiny $\sSE$}; 
+\node at (h0;5.center) {\tiny $\sSW$}; 
+\node at (h1;5.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h2;5.south) {};
+\node at (h3;5.center) {\tiny $\sW$}; 
+\node at (h4;5.center) {\tiny $\sW$}; 
+\node at (h5;5.center) {\tiny 15}; 
+\node at (h6;5.center) {\tiny 15}; 
+\node at (h7;5.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h8;5.south) {};
+\node at (h9;5.center) {\tiny $\sSE$}; 
+\node at (h10;5.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;5.south) {};
+\node at (h12;5.center) {\tiny $\sSE$}; 
+\node at (h13;5.center) {\tiny $\sSE$}; 
+\node at (h14;5.center) {\tiny $\sSE$}; 
+\node at (h0;6.center) {\tiny 18}; 
+\node at (h1;6.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;6.south) {};
+\node at (h3;6.center) {\tiny $\sW$}; 
+\node at (h4;6.center) {\tiny $\sW$}; 
+\node at (h5;6.center) {\tiny 15}; 
+\node at (h6;6.center) {\tiny $\sSE$}; 
+\node at (h7;6.center) {\tiny $\sE$}; 
+\node at (h8;6.center) {\tiny $\sSE$}; 
+\node at (h9;6.center) {\tiny 18}; 
+\node at (h10;6.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;6.south) {};
+\node at (h12;6.center) {\tiny 18}; 
+\node at (h13;6.center) {\tiny $\sSE$}; 
+\node at (h14;6.center) {\tiny $\sSE$}; 
+\node at (h0;7.center) {\tiny $\sSW$}; 
+\node at (h1;7.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h2;7.south) {};\node[hexcell,filled] at (h3;7.south) {};\node[hexcell,filled] at (h4;7.south) {};
+\node at (h5;7.center) {\tiny $\sSE$}; 
+\node at (h6;7.center) {\tiny $\sSE$}; 
+\node at (h7;7.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h8;7.south) {};
+\node at (h9;7.center) {\tiny $\sSE$}; 
+\node at (h10;7.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;7.south) {};
+\node at (h12;7.center) {\tiny $\sSE$}; 
+\node at (h13;7.center) {\tiny $\sSE$}; 
+\node at (h14;7.center) {\tiny $\sSE$}; 
+\node at (h0;8.center) {\tiny 18}; 
+\node at (h1;8.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;8.south) {};
+\node at (h3;8.center) {\tiny $\sW$}; 
+\node at (h4;8.center) {\tiny 15}; 
+\node at (h5;8.center) {\tiny 15}; 
+\node at (h6;8.center) {\tiny $\sSE$}; 
+\node at (h7;8.center) {\tiny $\sSE$}; 
+\node at (h8;8.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h9;8.south) {};
+\node at (h10;8.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h11;8.south) {};
+\node at (h12;8.center) {\tiny 18}; 
+\node at (h13;8.center) {\tiny $\sSE$}; 
+\node at (h14;8.center) {\tiny $\sSE$}; 
+\node at (h0;9.center) {\tiny $\sSW$}; 
+\node at (h1;9.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h2;9.south) {};
+\node at (h3;9.center) {\tiny 15}; 
+\node at (h4;9.center) {\tiny $\sSE$}; 
+\node at (h5;9.center) {\tiny $\sSE$}; 
+\node at (h6;9.center) {\tiny $\sSE$}; 
+\node at (h7;9.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h8;9.south) {};
+\node at (h9;9.center) {\tiny $\sSW$}; 
+\node at (h10;9.center) {\tiny $\sSE$}; 
+\node at (h11;9.center) {\tiny $\sE$}; 
+\node at (h12;9.center) {\tiny $\sE$}; 
+\node at (h13;9.center) {\tiny $\sSE$}; 
+\node at (h14;9.center) {\tiny $\sSE$}; 
+\node at (h0;10.center) {\tiny 18}; 
+\node at (h1;10.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h2;10.south) {};\node[hexcell,filled] at (h3;10.south) {};\node[hexcell,filled] at (h4;10.south) {};\node[hexcell,filled] at (h5;10.south) {};\node[hexcell,filled] at (h6;10.south) {};
+\node at (h7;10.center) {\tiny $\sSE$}; 
+\node at (h8;10.center) {\tiny $\sSE$}; \node[hexcell,filled] at (h9;10.south) {};
+\node at (h10;10.center) {\tiny $\sSW$}; \node[hexcell,filled] at (h11;10.south) {};
+\node at (h12;10.center) {\tiny $\sSE$}; 
+\node at (h13;10.center) {\tiny $\sSE$}; 
+\node at (h14;10.center) {\tiny $\sSE$}; 
+\node at (h0;11.center) {\tiny $\sW$}; 
+\node at (h1;11.center) {\tiny $\sW$}; 
+\node at (h2;11.center) {\tiny $\sW$}; 
+\node at (h3;11.center) {\tiny $\sW$}; 
+\node at (h4;11.center) {\tiny $\sW$}; 
+\node at (h5;11.center) {\tiny $\sW$}; 
+\node at (h6;11.center) {\tiny 18}; 
+\node at (h7;11.center) {\tiny $\sSE$}; 
+\node at (h8;11.center) {\tiny $\sSE$}; 
+\node at (h9;11.center) {\tiny $\sE$}; 
+\node at (h10;11.center) {\tiny $\sE$}; 
+\node at (h11;11.center) {\tiny $\sE$}; 
+\node at (h12;11.center) {\tiny $\sSE$}; 
+\node at (h13;11.center) {\tiny $\sSE$}; 
+\node at (h14;11.center) {\tiny $\sSE$}; 
+\node at (h0;12.center) {\tiny $\sSW$}; 
+\node at (h1;12.center) {\tiny $\sSW$}; 
+\node at (h2;12.center) {\tiny $\sSW$}; 
+\node at (h3;12.center) {\tiny $\sSW$}; 
+\node at (h4;12.center) {\tiny $\sSW$}; 
+\node at (h5;12.center) {\tiny $\sSW$}; 
+\node at (h6;12.center) {\tiny $\sSW$}; 
+\node at (h7;12.center) {\tiny $\sSE$}; 
+\node at (h8;12.center) {\tiny $\sSE$}; 
+\node at (h9;12.center) {\tiny $\sSE$}; 
+\node at (h10;12.center) {\tiny $\sSE$}; 
+\node at (h11;12.center) {\tiny $\sSE$}; 
+\node at (h12;12.center) {\tiny $\sSE$}; 
+\node at (h13;12.center) {\tiny $\sSE$}; 
+\node at (h14;12.center) {\tiny $\sSE$}; 
+\node at (h0;13.center) {\tiny 18}; 
+\node at (h1;13.center) {\tiny 18}; 
+\node at (h2;13.center) {\tiny 18}; 
+\node at (h3;13.center) {\tiny 18}; 
+\node at (h4;13.center) {\tiny 18}; 
+\node at (h5;13.center) {\tiny 18}; 
+\node at (h6;13.center) {\tiny 18}; 
+\node at (h7;13.center) {\tiny $\sSE$}; 
+\node at (h8;13.center) {\tiny $\sSE$}; 
+\node at (h9;13.center) {\tiny $\sSE$}; 
+\node at (h10;13.center) {\tiny $\sSE$}; 
+\node at (h11;13.center) {\tiny $\sSE$}; 
+\node at (h12;13.center) {\tiny $\sSE$}; 
+\node at (h13;13.center) {\tiny $\sSE$}; 
+\node at (h14;13.center) {\tiny $\sSE$}; \node[hexcell,piecea] at (h0;14.south) {};\node[hexcell,piecea] at (h1;14.south) {};\node[hexcell,piecea] at (h2;14.south) {};\node[hexcell,piecea] at (h3;14.south) {};\node[hexcell,piecea] at (h4;14.south) {};\node[hexcell,piecea] at (h5;14.south) {};
+\node at (h6;14.center) {\tiny $\sSW$}; 
+\node at (h7;14.center) {\tiny 15}; 
+\node at (h8;14.center) {\tiny $\sSE$}; 
+\node at (h9;14.center) {\tiny $\sSE$}; 
+\node at (h10;14.center) {\tiny $\sSE$}; 
+\node at (h11;14.center) {\tiny $\sSE$}; 
+\node at (h12;14.center) {\tiny $\sSE$}; 
+\node at (h13;14.center) {\tiny $\sSE$}; 
+\node at (h14;14.center) {\tiny $\sSE$}; \end{tikzpicture}
+\fi
+\end{figure}

@@ -1,11 +1,13 @@
 \section{Optimisation des paramètres par algorithme génétique}
+\label{sec:gen}
 
 
-Afin de sélectionner la meilleure feuille de l'arbre construit par 
-l'algorithme principal, il faut lui attribuer un score pondéré par un certain 
-nombre de paramètres. Ces coefficients de pondération ont été choisis \ofg{au 
+Afin de sélectionner la meilleure position verrouillable par 
+l'algorithme principal, il faut lui attribuer un score qui est une somme
+pondérée de différents indicateurs numériques.
+Ces coefficients de pondération, qui sont tous des entiers naturels, ont été choisis \ofg{au 
 doigt mouillé} dans un premier temps en fonction de l'intuition que l'on avait 
-de leur effet potentiel, mais une fois l'algorithme laché sur un problème, il 
+de leur effet potentiel, mais une fois l'algorithme lâché sur un problème, il 
 n'est pas certain que le choix soit optimal. On a donc décidé d'utiliser un 
 algorithme génétique pour essayer de trouver rapidement un jeu de pondérations 
 qui puissent faire mieux que le jeu par défaut.

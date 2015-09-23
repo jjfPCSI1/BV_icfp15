@@ -146,7 +146,8 @@ du problème et d'un germe $g_i$, une partie se déroule ainsi :
                 à un verrouillage de la pièce.
             \item Si lors d'un mouvement une pièce a son pivot et les cases
                 qu'elle occupe dans une position déjà prise dans les mouvements 
-                précédents, la partie s'arrête.
+                précédents, la partie s'arrête (voir
+                paragraphe~\ref{par:stuttering}).
             \item Si nécessaire on supprime les lignes pleines.
         \end{enumerate}
 \end{enumerate}
@@ -155,7 +156,8 @@ Il y a donc trois conditions d'arrêt :
 \begin{itemize}
     \item soit les $N$ pièces ont été placées ;
     \item soit une pièce n'a pas pu être générée au sommet du plateau ;
-    \item soit une pièce a été placée deux fois dans la même position.
+    \item soit une pièce a été placée deux fois dans la même position (voir
+        paragraphe~\ref{par:stuttering}).
 \end{itemize}
 
 La figure~\ref{fig:prob7} présente un exemple de partie.
@@ -169,6 +171,7 @@ La figure~\ref{fig:prob7} présente un exemple de partie.
         \item \input{dessins/prob7_end.tex}
 \end{enumerate}
 \end{figure}
+
 
 \subsection{Encodage d'une solution}
 Une solution à une partie est une chaîne de caractères encodant la suite de mouvements à
@@ -209,31 +212,113 @@ des 18 phrases spéciales\footnote{Dont 5 dans la dernière heure grâce à des écha
 d'autres équipes\dots}.
 
 \begin{figure}
-    \caption{\label{fig:power}Les différentes phrases spéciales et leurs mouvements associés}
+    \caption{\label{fig:power}Les différentes phrases spéciales, numérotées de
+    1 à 18, et leurs mouvements associés}
     \centering
     \small
 
     \begin{description}
-        \item[{\tt in his house at r'lyeh dead cthulhu waits dreaming.}]
+        \item[1 {\tt in his house at r'lyeh dead cthulhu waits dreaming.}]
             $\sSW\sSE\sSE\sSW\sSW\sCCW\sSE\sSW\sSE\sCCW\sCCW\sE\sSE\sSW\sCCW\sSE$ \\ $\sCW\sW\sSE\sE\sE\sSW\sSE\sCW\sE\sSW\sCW\sSE\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sCCW\sSW\sSW\sCCW\sCCW\sSE\sCW\sCW\sE\sSW\sSE\sSW\sSE\sSW\sW$
-    \item[{\tt ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn.}] 
+    \item[2 {\tt ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn.}] 
             $\sW\sSW\sW\sSE\sSW\sSE\sCCW\sSW\sSE\sSE\sSW\sSE\sCCW\sW\sSE\sSW\sE$ \\ $\sSW\sSE\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sCW\sW\sSE\sE\sE\sSW\sSE\sCCW\sSW\sSW\sSW\sW\sSE\sSW\sSW\sSE\sSE\sE\sSW\sCCW\sSW\sSW\sSE\sW$
 
-    \item[{\tt case nightmare green}] $\sE\sSW\sCCW\sE\sSE\sSE\sSW\sSW\sSW\sCCW\sSE\sSW\sCW\sE\sSE\sSW\sCW\sE\sE\sSE$
-    \item[{\tt cthulhu fhtagn!}] $\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sE\sSW\sCCW\sSW\sSW\sSE\sW$
-    \item[{\tt john bigboote}] $\sSW\sSE\sSW\sSE\sSE\sE\sSW\sSW\sE\sSE\sSE\sCCW\sE$ 
-    \item[{\tt vigintillion}] $\sCW\sSW\sSW\sSW\sSE\sCCW\sSW\sSE\sSE\sSW\sSE\sSE$ 
-    \item[{\tt necronomicon}] $\sSE\sE\sE\sCW\sSE\sSE\sSE\sSE\sSW\sE\sSE\sSE$
-    \item[{\tt the laundry}] $\sCCW\sSW\sE\sSE\sSE\sSW\sCCW\sSE\sCW\sCW\sE$
-    \item[{\tt yogsothoth}] $\sE\sSE\sSW\sCCW\sSE\sCCW\sSW\sSE\sCCW\sSW$
-    \item[{\tt blue hades}] $\sE\sSE\sCCW\sE\sSE\sSW\sSW\sCW\sE\sCCW$
-    \item[{\tt tsathoggua}] $\sCCW\sCCW\sSW\sCCW\sSW\sSE\sSW\sSW\sCCW\sSW$
-    \item[{\tt monkeyboy}] $\sSE\sSE\sSE\sCCW\sE\sE\sE\sSE\sE$
-    \item[{\tt planet 10}] $\sW\sSE\sSW\sSE\sE\sCCW\sSE\sCW\sW$
-    \item[{\tt yoyodyne}] $\sE\sSE\sE\sSE\sCW\sE\sSE\sE$
-    \item[{\tt ia! ia!}] $\sSW\sSW\sW\sSE\sSW\sSW\sW$
-    \item[{\tt yuggoth}] $\sE\sCCW\sSW\sSW\sSE\sCCW\sSW$
-    \item[{\tt r'lyeh}] $\sCW\sW\sSE\sE\sE\sSW$
-    \item[{\tt ei!}] $\sE\sSW\sW$
+    \item[3 {\tt case nightmare green}] $\sE\sSW\sCCW\sE\sSE\sSE\sSW\sSW\sSW\sCCW\sSE\sSW\sCW\sE\sSE\sSW\sCW\sE\sE\sSE$
+    \item[4 {\tt cthulhu fhtagn!}] $\sE\sCCW\sSW\sCCW\sSE\sSW\sCCW\sSE\sE\sSW\sCCW\sSW\sSW\sSE\sW$
+    \item[5 {\tt john bigboote}] $\sSW\sSE\sSW\sSE\sSE\sE\sSW\sSW\sE\sSE\sSE\sCCW\sE$ 
+    \item[6 {\tt vigintillion}] $\sCW\sSW\sSW\sSW\sSE\sCCW\sSW\sSE\sSE\sSW\sSE\sSE$ 
+    \item[7 {\tt necronomicon}] $\sSE\sE\sE\sCW\sSE\sSE\sSE\sSE\sSW\sE\sSE\sSE$
+    \item[8 {\tt the laundry}] $\sCCW\sSW\sE\sSE\sSE\sSW\sCCW\sSE\sCW\sCW\sE$
+    \item[9 {\tt yogsothoth}] $\sE\sSE\sSW\sCCW\sSE\sCCW\sSW\sSE\sCCW\sSW$
+    \item[10 {\tt blue hades}] $\sE\sSE\sCCW\sE\sSE\sSW\sSW\sCW\sE\sCCW$
+    \item[11 {\tt tsathoggua}] $\sCCW\sCCW\sSW\sCCW\sSW\sSE\sSW\sSW\sCCW\sSW$
+    \item[12 {\tt monkeyboy}] $\sSE\sSE\sSE\sCCW\sE\sE\sE\sSE\sE$
+    \item[13 {\tt planet 10}] $\sW\sSE\sSW\sSE\sE\sCCW\sSE\sCW\sW$
+    \item[14 {\tt yoyodyne}] $\sE\sSE\sE\sSE\sCW\sE\sSE\sE$
+    \item[15 {\tt ia! ia!}] $\sSW\sSW\sW\sSE\sSW\sSW\sW$
+    \item[16 {\tt yuggoth}] $\sE\sCCW\sSW\sSW\sSE\sCCW\sSW$
+    \item[17 {\tt r'lyeh}] $\sCW\sW\sSE\sE\sE\sSW$
+    \item[18 {\tt ei!}] $\sE\sSW\sW$
 \end{description}
+\end{figure}
+
+\subsection{Répétition de positions}
+\label{par:stuttering}
+Pour ne pas qu'on puisse exploiter les phrases spéciales en créant des suites
+de mouvements très longues, il faut borner la longueur d'une suite de
+mouvements.
+
+Le plus simple pour cela est d'interdire de revenir dans une configuration
+précédente du plateau. Comme le plateau change après chaque verrouillage, il
+est possible de simplifier la contrainte en interdisant qu'au cours de la suite
+de mouvements d'une pièce donnée celle-ci occupe une position précédemment
+empruntée.
+
+Pour tenir compte des rotations, il faut être plus précis. Deux positions
+d'une pièce sont dites visuellement identiques quand :
+\begin{itemize}
+    \item le pivot est à la même position dans la grille ;
+    \item toute cellule occupée par une des pièces est occupée par l'autre.
+\end{itemize}
+
+On interdit alors d'avoir deux positions visuellement identiques au cours d'un
+mouvement.
+
+C'est en considérant des pièces ayant des symétries de rotation que cette
+condition prend tout son sens et montre qu'il ne s'agit pas uniquement
+d'interdire les retours en arrière. La figure~\ref{fig:stuttering} présente un
+exemple de suite de mouvements faisant apparaitre des positions visuellement
+identiques.
+
+\begin{figure}
+    \caption{\label{fig:stuttering} Une suite de mouvement invalide car la
+    première et la dernière position sont visuellement identiques}
+    \centering
+\ifdessins
+    \[
+\begin{tikzpicture}
+\hexgrid{3}{2}
+\node[hexcell,pieceo] at (h0;1.south) {};
+\node[hexcell,pieceo] at (h2;0.south) {};
+\node[hexcell,pieceo] at (h2;2.south) {};
+\pivot{1}{1}
+\mCW{1}{1}
+\end{tikzpicture} 
+\quad
+\begin{tikzpicture}
+\hexgrid{3}{2}
+\node[hexcell,pieceo] at (h2;1.south) {};
+\node[hexcell,pieceo] at (h1;0.south) {};
+\node[hexcell,pieceo] at (h1;2.south) {};
+\pivot{1}{1}
+\mE{1}{1}
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+\hexgrid{3}{2}
+\node[hexcell,pieceo] at (h3;1.south) {};
+\node[hexcell,pieceo] at (h2;0.south) {};
+\node[hexcell,pieceo] at (h2;2.south) {};
+\pivot{2}{1}
+\mCW{2}{1}
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+\hexgrid{3}{2}
+\node[hexcell,pieceo] at (h1;1.south) {};
+\node[hexcell,pieceo] at (h3;0.south) {};
+\node[hexcell,pieceo] at (h3;2.south) {};
+\pivot{2}{1}
+\mW{2}{1}
+\end{tikzpicture} 
+\quad
+\begin{tikzpicture}
+\hexgrid{3}{2}
+\node[hexcell,pieceo] at (h0;1.south) {};
+\node[hexcell,pieceo] at (h2;0.south) {};
+\node[hexcell,pieceo] at (h2;2.south) {};
+\pivot{1}{1}
+\end{tikzpicture} 
+\]
+\fi
 \end{figure}
