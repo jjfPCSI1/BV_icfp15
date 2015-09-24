@@ -95,7 +95,7 @@ du problème, ce qui donne pour la rotation horaire :
 \end{multline*}
 
 \begin{figure}
-    \caption{\label{fig:hexcoord2}Système de coordonnées obliquess}
+    \caption{\label{fig:hexcoord2}Système de coordonnées obliques}
 \ifdessins
 \centering
 \begin{tikzpicture}[scale=2, every node/.style={transform shape}]
@@ -132,23 +132,25 @@ du problème, ce qui donne pour la rotation horaire :
 On peut alors choisir d'utiliser ces coordonnées uniquement pour calculer les
 positions après transformation ou les utiliser partout en ne revenant aux
 coordonnées initiales que pour accéder au plateau. Lors du concours nous avons
-fait le premier choix car le code avec déjà été écrit sans les rotations qui
-sont arrivées trop tard pour partir sur le bon système de coordonnées.
+fait le premier choix car le code avait déjà été écrit sans les rotations 
+et il était trop tard pour partir sur le bon système de coordonnées.
 
-Notons un autre avantage du système de coordonnées obliques : la translation
-est géométrique, donc un simple ajout aux coordonnées.
+Notons un autre avantage du système de coordonnées obliques, la translation
+est géométrique : il s'agit d'un simple ajout aux coordonnées.
+
 Cela donne la possibilité d'identifier une pièce à la position de son pivot et 
-de sa rotation  tout en pouvant calculer très simplement la position de ses cellules.
-En effet, on peut calculer toutes les rotations d'une pièce au départ
-puis se contenter de translater les cellules.
+à sa rotation tout en pouvant calculer très simplement la position de ses cellules.
+
+Pour cela, on peut calculer toutes les rotations d'une pièce au départ
+puis se contenter de translater les cellules à la volée.
 
 \subsection{Identification unique des positions}
 \label{par:id_unique}
-Afin de pouvoir assurer qu'aucune répétition de position a lieu il ne suffit pas de prendre 
+Afin de pouvoir assurer qu'aucune répétition de position a lieu, il ne suffit pas de prendre 
 en compte des couples $(M,r)$ où $M$ est la position du pivot et $r$ la rotation effectués sur la 
 pièce.
 
-En effet, certaines pièces sont invariantes par certaines rotations et la seule donnée de $r$
+En effet, certaines pièces sont invariantes par rotation et la seule donnée de $r$
 ne permet pas de le prendre en compte. On considère pour cela son groupe d'invariants.
 
 Soit $p$ une pièce on note $r_p$ la rotation d'un angle $\frac{\pi}{6}$ autour de son pivot.
@@ -179,20 +181,20 @@ par un triplet  $(x,y,r)$ où $(x,y)$ est la position du pivot et $r \in \{0,
 \cdots, k(p) \}$ représente la rotation $f(\overline{r})$ appliquée sur la
 pièce.
 
-Pour maintenir la valeur de $r$ à jour lors des mouvements, il suffit de remarquer qu'une rotation 
-revient à ajouter $\overline{\pm 1}$ dans $G_r(p)$. Il suffit donc de remplacer
+Pour maintenir la valeur de $r$ à jour lors des mouvements, 
+on a juste à ajouter $\overline{\pm 1}$ dans $G_r(p)$ : on remplace
 $r$ par $(r \pm 1) \mod k(p)$.
 
 \subsection{Tableau de positions}
 \label{par:tab_pos}
-Comme dans la plupart des parcours de graphe on va être amener à maintenir un
+Comme dans la plupart des parcours de graphe, on va être amené à maintenir un
 booléen par position pour savoir si cette position a déjà été visitée.
 
 On crée donc un tableau à trois dimensions proposant une case par triplet
 $(x,y,r)$ comme décrit au paragraphe précédent.
 
 Cependant, comme le pivot peut sortir
-de la zone de jeu, il faut border le tableau pour pouvoir tenir compte de ces positions du pivot.
+de la zone de jeu, il faut \emph{border} le tableau pour pouvoir tenir compte de ces positions du pivot.
 
 Un calcul rapide sur les pièces disponibles permet de déterminer une valeur $b$ telle que le pivot 
 dans une zone de jeu de dimension $w \times h$ ait des coordonnées dans $[|-b;w+b-1|] \times
@@ -418,7 +420,7 @@ flèches}.
 \end{figure}
 
 Pour ne pas visiter plusieurs fois une même position on maintient un tableau de
-booléen indexé par l'identifiant unique vu en~\ref{par:tab_pos}.
+booléens indexé par l'identifiant unique vu en~\ref{par:tab_pos}.
 
 Quand à partir d'une position il n'est pas possible d'effectuer tous les
 mouvements, alors il existe un mouvement permettant de verrouiller la pièce.
@@ -500,7 +502,7 @@ Tant que à_visiter est non vide:
 
 En utilisant une file plutôt qu'une pile on obtient un parcours en largeur et
 on a donc la garantie que les chemins obtenus soient de longueur minimale.
-Cela n'a pour le moment pas d'importance mais il nous a semblé plus naturel de
+Cela n'a pas vraiment d'importance mais il nous a semblé plus naturel de
 procéder ainsi au début du concours car les pièces mettait beaucoup de
 mouvements à venir en position car elle zigzaguaient de gauche à droite.
 
@@ -509,7 +511,8 @@ intégrer les phrases spéciales dans l'algorithme.
 
 
 \subsection{Sélection de la meilleure position verrouillable}
-A l'issue du parcours précédent on obtient une liste de positions verrouillable
+A l'issue du parcours précédent on obtient une liste de positions
+verrouillables
 avec le chemin permettant d'y accéder depuis la position initiale de la pièce.
 
 Afin de choisir la position verrouillable que l'on va jouer, on effectue un
@@ -525,7 +528,7 @@ du plateau avec la pièce verrouillée :
         augmentation de la hauteur est presque toujours mauvais signe ;
     \item\textbf{la différence entre la hauteur du plateau et la position de la plus haute 
         cellule de la pièce verrouillée} -- \emph{à minimiser} -- on favorise
-        la compactification du plateau en donnant un bonus aux verrouillage
+        le remplissage du plateau en donnant un bonus aux verrouillage
         proches du bas du plateau ;
     \item\textbf{le nombre de lignes complètement remplies} -- \emph{à
         maximiser} -- ici ce n'est pas aussi simple qu'on pourrait le croire
@@ -575,10 +578,11 @@ mouvements élémentaires.
 
 Cependant, lors du concours, cela semblait suffisant pour marquer des points.
 
-Une amélioration rapide de l'algorithme consisterait dans un second temps à
-regarder pour chaque cellule si on peut l'atteindre par une phrase spéciale à
-partir d'une position découverte. Ce genre d'optimisation peut paraitre
-évidente à la lecture de cet article, d'autant en constatant sur la
+Une amélioration de l'algorithme consisterait à utiliser de la programmation
+dynamique pour calculer pour chaque cellule le chemin faisant apparaître le
+maximum de phrases spéciales.
+Ce genre d'optimisation peut paraitre
+évidente à la lecture de cet article, d'autant plus en constatant sur la
 figure~\ref{fig:largeur_pw} le faible emploi des phrases spéciales. Cependant,
 pendant le concours, nous n'y avons pas pensé et cela nous a surement fait
 perdre une dizaine de places.
