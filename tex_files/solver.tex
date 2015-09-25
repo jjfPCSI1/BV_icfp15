@@ -429,7 +429,7 @@ On peut alors ajouter cette position aux positions verrouillables.
 Cela nous donne le pseudo-code suivant :
 \begin{code}
 \begin{verbatim}
-verouillables = []
+verrouillables = []
 visitées = crée tableau de taille W x H x 6 initialisé à faux
 à_visiter = file vide
 
@@ -443,7 +443,7 @@ Tant que à_visiter est non vide:
 
     visitées[position] = vrai
 
-    mouvements_qui_verouillent  = []
+    mouvements_qui_verrouillent  = []
 
     Pour chaque mouvement:
         nouvelle_position = effectue mouvement depuis position
@@ -452,9 +452,9 @@ Tant que à_visiter est non vide:
         Sinon:
             ajoute mouvement à mouvements_qui_verrouillent
 
-    Si mouvements_qui_verouillent est non vide:
-        mouvement = mouvements_qui_verouillent[0]
-        ajoute (position, mouvement) à verouillables
+    Si mouvements_qui_verrouillent est non vide:
+        mouvement = mouvements_qui_verrouillent[0]
+        ajoute (position, mouvement) à verrouillables
 \end{verbatim}
 \end{code}
 
@@ -469,7 +469,7 @@ occupée sur le plateau.
 On obtient alors le nouveau pseudo-code :
 \begin{code}
 \begin{verbatim}
-verouillables = []
+verrouillables = []
 visitées = crée tableau de taille W x H x 6 initialisé à faux
 à_visiter = file vide
 
@@ -483,7 +483,7 @@ Tant que à_visiter est non vide:
 
     visitées[position] = vrai
 
-    mouvements_qui_verouillent  = []
+    mouvements_qui_verrouillent  = []
 
     Pour chaque mouvement:
         nouvelle_position = effectue mouvement depuis position
@@ -493,10 +493,10 @@ Tant que à_visiter est non vide:
         Sinon:
             ajoute mouvement à mouvements_qui_verrouillent
 
-    Si mouvements_qui_verouillent est non vide:
-        mouvement = mouvements_qui_verouillent[0]
+    Si mouvements_qui_verrouillent est non vide:
+        mouvement = mouvements_qui_verrouillent[0]
         Si position suffissament basse:
-            ajoute (position, chemin, mouvement) à verouillables
+            ajoute (position, chemin, mouvement) à verrouillables
 \end{verbatim}
 \end{code}
 
